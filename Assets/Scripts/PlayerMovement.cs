@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public enum MovementType
 {
@@ -9,12 +10,18 @@ public enum MovementType
 
 public class PlayerMovement : MonoBehaviour
 {
+    public MovementType CurrentStateType { get; private set; }
+    public event Action<MovementType> OnMovementStateChange;
+    public float CurrentMoveSpeed { get; private set; }
+    public float MaxRunSpeed => runSpeed;
+
     [SerializeField] Transform playerModel;
     [SerializeField] Transform followTarget;
     [SerializeField] Transform movementTransform;
     [SerializeField] float mouseSensitivity = 10f;
     [SerializeField] float modelTurnSpeed = 60f;
     [SerializeField] float runSpeed = 5f;
+    [SerializeField] float runAcceleration = .5f;
 
     Vector3 movementVector;
     Quaternion targetRotation, currentRotation;
@@ -22,7 +29,6 @@ public class PlayerMovement : MonoBehaviour
     Dictionary<MovementType, MovementState> movementStates;
     MovementType defaultMovementState;
 
-    public MovementType CurrentStateType { get; private set; }
     MovementState currentState;
 
     private void Awake()
@@ -30,6 +36,7 @@ public class PlayerMovement : MonoBehaviour
         movementStates = new Dictionary<MovementType, MovementState>()
         {
             { MovementType.Standing, new StandingState(this) },
+            { MovementType.Running, new RunningState(this) },
         };
         defaultMovementState = MovementType.Standing;
     }
@@ -48,6 +55,7 @@ public class PlayerMovement : MonoBehaviour
             currentState = movementStates[defaultMovementState];
             currentState.BeforeExecution();
             CurrentStateType = defaultMovementState;
+            OnMovementStateChange?.Invoke(CurrentStateType);
         }
         // check for state transitions
         MovementType? returnedState = currentState.CheckTransitions();
@@ -58,7 +66,14 @@ public class PlayerMovement : MonoBehaviour
             currentState = movementStates[newState];
             currentState.BeforeExecution();
             CurrentStateType = newState;
+            OnMovementStateChange?.Invoke(CurrentStateType);
         }
+        currentState.DuringExecution();
+    }
+
+    private void FixedUpdate()
+    {
+        currentState?.DuringPhysicsUpdate();
     }
 
     void MoveLaterally(float moveSpeed)
@@ -84,6 +99,7 @@ public class PlayerMovement : MonoBehaviour
         }
         movementVector.Normalize();
         transform.Translate(moveSpeed * Time.deltaTime * movementVector, Space.World);
+        CurrentMoveSpeed = moveSpeed;
     }
 
     void MouseRotation()
@@ -138,12 +154,16 @@ public class PlayerMovement : MonoBehaviour
 
         public override MovementType? CheckTransitions()
         {
+            if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.D))
+            {
+                return MovementType.Running;
+            }
             return null;
         }
 
         public override void DuringExecution()
         {
-
+            movement.MouseRotation();
         }
 
         public override void DuringPhysicsUpdate()
@@ -154,6 +174,8 @@ public class PlayerMovement : MonoBehaviour
 
     class RunningState : MovementState
     {
+        float currentRunSpeed = 0f;
+
         public RunningState(PlayerMovement movement) : base(movement) { }
 
         public override void AfterExecution()
@@ -164,16 +186,22 @@ public class PlayerMovement : MonoBehaviour
         public override void BeforeExecution()
         {
             print("Running State");
+            currentRunSpeed = 0;
         }
 
         public override MovementType? CheckTransitions()
         {
+            if (!Input.GetKey(KeyCode.W) && !Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.S) && !Input.GetKey(KeyCode.D))
+            {
+                return MovementType.Standing;
+            }
             return null;
         }
 
         public override void DuringExecution()
         {
-            movement.MoveLaterally(movement.runSpeed);
+            currentRunSpeed = Mathf.Lerp(movement.CurrentMoveSpeed, movement.runSpeed, movement.runAcceleration * Time.deltaTime);
+            movement.MoveLaterally(currentRunSpeed);
             movement.MouseRotation();
             movement.RotatePlayerModel();
         }
