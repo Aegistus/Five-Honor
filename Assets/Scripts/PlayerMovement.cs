@@ -14,6 +14,12 @@ public class PlayerMovement : MonoBehaviour
     Vector3 movementVector;
     Quaternion targetRotation, currentRotation;
 
+    private void Start()
+    {
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+    }
+
     private void Update()
     {
         // lateral movement
