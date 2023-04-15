@@ -286,6 +286,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   transitionTime: 0.1
+  stanceTransitionSpeed: 4
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0

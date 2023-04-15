@@ -5,11 +5,17 @@ using UnityEngine;
 public class PlayerAnimation : MonoBehaviour
 {
     [SerializeField] float transitionTime = .5f;
+    [SerializeField] float stanceTransitionSpeed = 2f;
 
     /// <summary>
-    /// 0 = Combat Stance, 1 = Passive Stance
+    /// 1 = Combat Stance, 2 = Passive Stance
     /// </summary>
-    int currentStanceLayer = 0;
+    int currentStanceLayer;
+    Dictionary<StanceType, int> stanceToLayer = new Dictionary<StanceType, int>()
+    {
+        {StanceType.Combat, 1},
+        {StanceType.Passive, 2 }
+    };
     PlayerMovement movement;
     Animator anim;
 
@@ -25,6 +31,7 @@ public class PlayerAnimation : MonoBehaviour
         anim = GetComponentInChildren<Animator>();
         movement.OnMovementStateChange += UpdateMovementAnimation;
         movement.OnStanceChange += ChangeStanceAnimations;
+        ChangeStanceAnimations(StanceType.Passive);
     }
 
     void UpdateMovementAnimation(MovementType newMovement)
@@ -37,13 +44,13 @@ public class PlayerAnimation : MonoBehaviour
     {
         if (newStance == StanceType.Combat)
         {
-            currentStanceLayer = 0;
-            StartCoroutine(ChangeStanceLayerWeight(currentStanceLayer, 1));
+            currentStanceLayer = stanceToLayer[StanceType.Combat];
+            StartCoroutine(ChangeStanceLayerWeight(currentStanceLayer, stanceToLayer[StanceType.Passive]));
         }
         else
         {
-            currentStanceLayer = 1;
-            StartCoroutine(ChangeStanceLayerWeight(currentStanceLayer, 0));
+            currentStanceLayer = stanceToLayer[StanceType.Passive];
+            StartCoroutine(ChangeStanceLayerWeight(currentStanceLayer, stanceToLayer[StanceType.Combat]));
         }
         UpdateMovementAnimation(movement.CurrentStateType);
     }
@@ -54,25 +61,27 @@ public class PlayerAnimation : MonoBehaviour
         bool oldLayerDone = false;
         while (!newLayerDone || !oldLayerDone)
         {
-            yield return null;
             float newLayerWeight = anim.GetLayerWeight(newLayer);
             float oldLayerWeight = anim.GetLayerWeight(oldLayer);
             if (newLayerWeight < 1)
             {
-                anim.SetLayerWeight(newLayer, newLayerWeight + Time.deltaTime);
+                anim.SetLayerWeight(newLayer, newLayerWeight + (Time.deltaTime * stanceTransitionSpeed));
             }
             else
             {
+                anim.SetLayerWeight(newLayer, 1);
                 newLayerDone = true;
             }
             if (oldLayerWeight > 0)
             {
-                anim.SetLayerWeight(oldLayer, oldLayerWeight - Time.deltaTime);
+                anim.SetLayerWeight(oldLayer, oldLayerWeight - (Time.deltaTime * stanceTransitionSpeed));
             }
             else
             {
+                anim.SetLayerWeight(oldLayer, 0);
                 oldLayerDone = true;
             }
+            yield return null;
         }
     }
 }
