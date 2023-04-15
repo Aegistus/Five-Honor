@@ -7,13 +7,19 @@ public enum MovementType
 {
     Standing, Running, Sprinting
 }
+public enum StanceType
+{
+    Passive, Combat
+}
 
 public class PlayerMovement : MonoBehaviour
 {
     public MovementType CurrentStateType { get; private set; }
     public event Action<MovementType> OnMovementStateChange;
+    public event Action<StanceType> OnStanceChange;
     public float CurrentMoveSpeed { get; private set; }
     public float MaxRunSpeed => runSpeed;
+    public StanceType CurrentStance => currentStance;
 
     [SerializeField] Transform playerModel;
     [SerializeField] Transform followTarget;
@@ -30,6 +36,7 @@ public class PlayerMovement : MonoBehaviour
     MovementType defaultMovementState;
 
     MovementState currentState;
+    StanceType currentStance;
 
     private void Awake()
     {
@@ -49,6 +56,18 @@ public class PlayerMovement : MonoBehaviour
 
     private void Update()
     {
+        // change stance
+        if (Input.GetKeyDown(KeyCode.LeftControl))
+        {
+            if (currentStance == StanceType.Passive)
+            {
+                ChangeStance(StanceType.Combat);
+            }
+            else
+            {
+                ChangeStance(StanceType.Passive);
+            }
+        }
         // set to default state if null
         if (currentState == null)
         {
@@ -119,6 +138,12 @@ public class PlayerMovement : MonoBehaviour
         targetRotation.eulerAngles = new Vector3(0, playerModel.eulerAngles.y, 0);
         playerModel.rotation = currentRotation;
         playerModel.rotation = Quaternion.Lerp(currentRotation, targetRotation, modelTurnSpeed * Time.deltaTime);
+    }
+
+    void ChangeStance(StanceType newStance)
+    {
+        currentStance = newStance;
+        OnStanceChange?.Invoke(newStance);
     }
 
     #region Movement States
