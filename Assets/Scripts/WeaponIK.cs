@@ -5,6 +5,7 @@ using UnityEngine;
 public class WeaponIK : MonoBehaviour
 {
     public Transform leftIKTarget;
+    public Transform rightIKTarget;
     public Vector3 rightHandOffset;
     public Vector3 rightHandRotation;
     public Vector3 leftHandOffset;
