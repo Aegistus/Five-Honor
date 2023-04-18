@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-enum HandParent
+enum Hand
 {
     None, LeftHand, RightHand
 }
@@ -14,7 +14,7 @@ public class PlayerIK : MonoBehaviour
     [SerializeField] Transform leftHand;
 
     Transform WeaponTransform => currentWeapon.transform;
-    HandParent weaponParent = HandParent.None;
+    Hand weaponParent = Hand.None;
 
     bool ik;
     Animator anim;
@@ -38,7 +38,7 @@ public class PlayerIK : MonoBehaviour
         {
             ik = true;
             WeaponTransform.SetParent(rightHand);
-            weaponParent = HandParent.RightHand;
+            weaponParent = Hand.RightHand;
             WeaponTransform.localRotation = Quaternion.Euler(currentWeapon.rightHandRotation);
             WeaponTransform.localPosition = currentWeapon.rightHandOffset;
         }
@@ -46,7 +46,7 @@ public class PlayerIK : MonoBehaviour
         {
             ik = false;
             WeaponTransform.SetParent(leftHand);
-            weaponParent = HandParent.LeftHand;
+            weaponParent = Hand.LeftHand;
             WeaponTransform.localRotation = Quaternion.Euler(currentWeapon.leftHandRotation);
             WeaponTransform.localPosition = currentWeapon.leftHandOffset;
         }
@@ -54,12 +54,12 @@ public class PlayerIK : MonoBehaviour
 
     private void Update()
     {
-        if (weaponParent == HandParent.LeftHand)
+        if (weaponParent == Hand.LeftHand)
         {
             WeaponTransform.localRotation = Quaternion.Euler(currentWeapon.leftHandRotation);
             WeaponTransform.localPosition = currentWeapon.leftHandOffset;
         }
-        if (weaponParent == HandParent.RightHand)
+        if (weaponParent == Hand.RightHand)
         {
             WeaponTransform.localRotation = Quaternion.Euler(currentWeapon.rightHandRotation);
             WeaponTransform.localPosition = currentWeapon.rightHandOffset;
@@ -72,8 +72,8 @@ public class PlayerIK : MonoBehaviour
         {
             anim.SetIKPositionWeight(AvatarIKGoal.LeftHand, 1);
             anim.SetIKRotationWeight(AvatarIKGoal.LeftHand, 1);
-            anim.SetIKPosition(AvatarIKGoal.LeftHand, WeaponTransform.position);
-            anim.SetIKRotation(AvatarIKGoal.LeftHand, WeaponTransform.rotation);
+            anim.SetIKPosition(AvatarIKGoal.LeftHand, currentWeapon.leftIKTarget.position);
+            anim.SetIKRotation(AvatarIKGoal.LeftHand, currentWeapon.leftIKTarget.rotation);
         }
     }
 }

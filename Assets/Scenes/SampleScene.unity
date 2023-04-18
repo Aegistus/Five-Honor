@@ -715,6 +715,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 345b15c8ac643a84bb60c8441f0f56fe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  leftIKTarget: {fileID: 73837639}
   rightHandOffset: {x: 19.6, y: 3.97, z: -19.82}
   rightHandRotation: {x: -90, y: -26.13, z: 0}
   leftHandOffset: {x: -8, y: -3.76, z: 0}
