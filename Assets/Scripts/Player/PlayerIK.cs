@@ -74,16 +74,8 @@ public class PlayerIK : MonoBehaviour
 
     private void Update()
     {
-        if (rightWeaponParent == Hand.LeftHand)
-        {
-            rightWeapon.transform.localRotation = Quaternion.Euler(rightWeapon.leftHandRotation);
-            rightWeapon.transform.localPosition = rightWeapon.leftHandOffset;
-        }
-        if (rightWeaponParent == Hand.RightHand)
-        {
-            rightWeapon.transform.localRotation = Quaternion.Euler(rightWeapon.rightHandRotation);
-            rightWeapon.transform.localPosition = rightWeapon.rightHandOffset;
-        }
+        UpdateWeaponTransformToHand(rightWeapon, Hand.RightHand);
+        UpdateWeaponTransformToHand(leftWeapon, Hand.LeftHand);
     }
 
     private void OnAnimatorIK(int layerIndex)
@@ -101,6 +93,20 @@ public class PlayerIK : MonoBehaviour
             anim.SetIKRotationWeight(AvatarIKGoal.RightHand, 1);
             anim.SetIKPosition(AvatarIKGoal.RightHand, leftWeapon.rightIKTarget.position);
             anim.SetIKRotation(AvatarIKGoal.RightHand, leftWeapon.rightIKTarget.rotation);
+        }
+    }
+
+    void UpdateWeaponTransformToHand(WeaponIK weapon, Hand hand)
+    {
+        if (hand == Hand.RightHand)
+        {
+            weapon.transform.localRotation = Quaternion.Euler(weapon.rightHandRotation);
+            weapon.transform.localPosition = weapon.rightHandOffset;
+        }
+        else if (hand == Hand.LeftHand)
+        {
+            weapon.transform.localRotation = Quaternion.Euler(weapon.leftHandRotation);
+            weapon.transform.localPosition = weapon.leftHandOffset;
         }
     }
 }

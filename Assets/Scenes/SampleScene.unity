@@ -536,8 +536,8 @@ MonoBehaviour:
   rightIKTarget: {fileID: 0}
   rightHandOffset: {x: 0, y: 0, z: 0}
   rightHandRotation: {x: 0, y: 0, z: 0}
-  leftHandOffset: {x: 0, y: 0, z: 0}
-  leftHandRotation: {x: 0, y: 0, z: 0}
+  leftHandOffset: {x: 5.56, y: -4.94, z: 3.17}
+  leftHandRotation: {x: -90, y: -8.54, z: 180}
 --- !u!1 &852006749
 GameObject:
   m_ObjectHideFlags: 0
@@ -992,8 +992,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   leftIKTarget: {fileID: 0}
   rightIKTarget: {fileID: 1428354204}
-  rightHandOffset: {x: 0, y: 0, z: 0}
-  rightHandRotation: {x: 0, y: 0, z: 0}
+  rightHandOffset: {x: 6.47, y: 2.89, z: -1.06}
+  rightHandRotation: {x: -100, y: 0, z: -34.64}
   leftHandOffset: {x: 0, y: 0, z: 0}
   leftHandRotation: {x: 0, y: 0, z: 0}
 --- !u!1 &1341511979
@@ -3114,7 +3114,7 @@ Animator:
   m_GameObject: {fileID: 1316982824854014}
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: b5f71c859f9f9bf41badda8a4650082c, type: 3}
-  m_Controller: {fileID: 22100000, guid: 615909b0f663d4348bba313c20bb5075, type: 2}
+  m_Controller: {fileID: 22100000, guid: 646fb5827992e254996b208f6b1e6187, type: 2}
   m_CullingMode: 1
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
