@@ -5,7 +5,7 @@ using System;
 
 public enum MovementType
 {
-    Standing, Running, Sprinting
+    Standing, Running, Sprinting, StrafingLeft, StrafingRight
 }
 public enum StanceType
 {
@@ -28,6 +28,8 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] float modelTurnSpeed = 60f;
     [SerializeField] float runSpeed = 5f;
     [SerializeField] float runAcceleration = .5f;
+    [SerializeField] float strafeSpeed = 4f;
+    [SerializeField] float strafeAcceleration = .5f;
 
     Vector3 movementVector;
     Quaternion targetRotation, currentRotation;
@@ -44,6 +46,8 @@ public class PlayerMovement : MonoBehaviour
         {
             { MovementType.Standing, new StandingState(this) },
             { MovementType.Running, new RunningState(this) },
+            { MovementType.StrafingLeft, new StrafeLeftState(this) },
+            { MovementType.StrafingRight, new StrafeRightState(this) },
         };
         defaultMovementState = MovementType.Standing;
     }
@@ -124,6 +128,10 @@ public class PlayerMovement : MonoBehaviour
     void MouseRotation()
     {
         // mouse rotation
+        if (currentStance == StanceType.Combat)
+        {
+            return;
+        }
         float mouseX = Input.GetAxis("Mouse X");
         float mouseY = Input.GetAxis("Mouse Y");
         followTarget.Rotate(-mouseY * mouseSensitivity * Time.deltaTime, mouseX * mouseSensitivity * Time.deltaTime, 0);
@@ -216,6 +224,17 @@ public class PlayerMovement : MonoBehaviour
 
         public override MovementType? CheckTransitions()
         {
+            if (movement.CurrentStance == StanceType.Combat)
+            {
+                if (Input.GetKey(KeyCode.A))
+                {
+                    return MovementType.StrafingLeft;
+                }
+                if (Input.GetKey(KeyCode.D))
+                {
+                    return MovementType.StrafingRight;
+                }
+            }
             if (!Input.GetKey(KeyCode.W) && !Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.S) && !Input.GetKey(KeyCode.D))
             {
                 return MovementType.Standing;
@@ -234,6 +253,94 @@ public class PlayerMovement : MonoBehaviour
         public override void DuringPhysicsUpdate()
         {
             
+        }
+    }
+
+    class StrafeLeftState : MovementState
+    {
+        float currentStrafeSpeed = 0f;
+        
+        public StrafeLeftState(PlayerMovement movement) : base(movement)
+        {
+        }
+
+        public override void AfterExecution()
+        {
+
+        }
+
+        public override void BeforeExecution()
+        {
+            print("Strafing Left");
+            currentStrafeSpeed = 0f;
+        }
+
+        public override MovementType? CheckTransitions()
+        {
+            if (movement.currentStance != StanceType.Combat)
+            {
+                return MovementType.Standing;
+            }
+            if (!Input.GetKey(KeyCode.A))
+            {
+                return MovementType.Standing;
+            }
+            return null;
+        }
+
+        public override void DuringExecution()
+        {
+            currentStrafeSpeed = Mathf.Lerp(movement.CurrentMoveSpeed, movement.runSpeed, movement.runAcceleration * Time.deltaTime);
+            movement.MoveLaterally(currentStrafeSpeed);
+        }
+
+        public override void DuringPhysicsUpdate()
+        {
+
+        }
+    }
+
+    class StrafeRightState : MovementState
+    {
+        float currentStrafeSpeed = 0f;
+
+        public StrafeRightState(PlayerMovement movement) : base(movement)
+        {
+        }
+
+        public override void AfterExecution()
+        {
+
+        }
+
+        public override void BeforeExecution()
+        {
+            print("Strafing Right");
+            currentStrafeSpeed = 0f;
+        }
+
+        public override MovementType? CheckTransitions()
+        {
+            if (movement.currentStance != StanceType.Combat)
+            {
+                return MovementType.Standing;
+            }
+            if (!Input.GetKey(KeyCode.D))
+            {
+                return MovementType.Standing;
+            }
+            return null;
+        }
+
+        public override void DuringExecution()
+        {
+            currentStrafeSpeed = Mathf.Lerp(movement.CurrentMoveSpeed, movement.runSpeed, movement.runAcceleration * Time.deltaTime);
+            movement.MoveLaterally(currentStrafeSpeed);
+        }
+
+        public override void DuringPhysicsUpdate()
+        {
+
         }
     }
 

@@ -21,8 +21,10 @@ public class PlayerAnimation : MonoBehaviour
 
     Dictionary<MovementType, int> movementTypeToAnimation = new Dictionary<MovementType, int>()
     {
-        {MovementType.Standing, Animator.StringToHash("Standing") },
-        {MovementType.Running, Animator.StringToHash("Running") },
+        { MovementType.Standing, Animator.StringToHash("Standing") },
+        { MovementType.Running, Animator.StringToHash("Running") },
+        { MovementType.StrafingLeft, Animator.StringToHash("StrafingLeft") },
+        { MovementType.StrafingRight, Animator.StringToHash("StrafingRight") },
     };
 
     private void Awake()
