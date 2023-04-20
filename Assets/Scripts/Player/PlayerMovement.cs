@@ -24,7 +24,8 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] Transform playerModel;
     [SerializeField] Transform followTarget;
     [SerializeField] Transform movementTransform;
-    [SerializeField] float mouseSensitivity = 10f;
+    [SerializeField] Transform target;
+    [SerializeField] Vector3 targetOffset;
     [SerializeField] float modelTurnSpeed = 60f;
     [SerializeField] float runSpeed = 5f;
     [SerializeField] float runAcceleration = .5f;
@@ -124,18 +125,14 @@ public class PlayerMovement : MonoBehaviour
         transform.Translate(moveSpeed * Time.deltaTime * movementVector, Space.World);
         CurrentMoveSpeed = moveSpeed;
     }
-
-    void MouseRotation()
+    
+    void CombatRotatePlayerModel()
     {
-        // mouse rotation
-        if (currentStance == StanceType.Combat)
-        {
-            return;
-        }
-        float mouseX = Input.GetAxis("Mouse X");
-        float mouseY = Input.GetAxis("Mouse Y");
-        followTarget.Rotate(-mouseY * mouseSensitivity * Time.deltaTime, mouseX * mouseSensitivity * Time.deltaTime, 0);
-        followTarget.eulerAngles = new Vector3(followTarget.eulerAngles.x, followTarget.eulerAngles.y, 0);
+        currentRotation = playerModel.rotation;
+        playerModel.LookAt(target);
+        targetRotation.eulerAngles = new Vector3(0, playerModel.eulerAngles.y, 0);
+        playerModel.rotation = currentRotation;
+        playerModel.rotation = Quaternion.Lerp(currentRotation, targetRotation, modelTurnSpeed * Time.deltaTime);
     }
 
     void RotatePlayerModel()
@@ -196,7 +193,10 @@ public class PlayerMovement : MonoBehaviour
 
         public override void DuringExecution()
         {
-            movement.MouseRotation();
+            if (movement.currentStance == StanceType.Combat)
+            {
+                movement.CombatRotatePlayerModel();
+            }
         }
 
         public override void DuringPhysicsUpdate()
@@ -246,8 +246,14 @@ public class PlayerMovement : MonoBehaviour
         {
             currentRunSpeed = Mathf.Lerp(movement.CurrentMoveSpeed, movement.runSpeed, movement.runAcceleration * Time.deltaTime);
             movement.MoveLaterally(currentRunSpeed);
-            movement.MouseRotation();
-            movement.RotatePlayerModel();
+            if (movement.currentStance == StanceType.Combat)
+            {
+                movement.CombatRotatePlayerModel();
+            }
+            else
+            {
+                movement.RotatePlayerModel();
+            }
         }
 
         public override void DuringPhysicsUpdate()
@@ -292,6 +298,7 @@ public class PlayerMovement : MonoBehaviour
         {
             currentStrafeSpeed = Mathf.Lerp(movement.CurrentMoveSpeed, movement.runSpeed, movement.runAcceleration * Time.deltaTime);
             movement.MoveLaterally(currentStrafeSpeed);
+            movement.CombatRotatePlayerModel();
         }
 
         public override void DuringPhysicsUpdate()
@@ -336,6 +343,7 @@ public class PlayerMovement : MonoBehaviour
         {
             currentStrafeSpeed = Mathf.Lerp(movement.CurrentMoveSpeed, movement.runSpeed, movement.runAcceleration * Time.deltaTime);
             movement.MoveLaterally(currentStrafeSpeed);
+            movement.CombatRotatePlayerModel();
         }
 
         public override void DuringPhysicsUpdate()
