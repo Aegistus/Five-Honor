@@ -23,9 +23,11 @@ public class PlayerAnimation : MonoBehaviour
     {
         { MovementType.Standing, Animator.StringToHash("Standing") },
         { MovementType.Running, Animator.StringToHash("Running") },
-        { MovementType.StrafingLeft, Animator.StringToHash("StrafingLeft") },
-        { MovementType.StrafingRight, Animator.StringToHash("StrafingRight") },
+        { MovementType.Strafing, Animator.StringToHash("Strafing") },
     };
+
+    int xMovementHash = Animator.StringToHash("XMovement");
+    int zMovementHash = Animator.StringToHash("ZMovement");
 
     private void Awake()
     {
@@ -34,6 +36,12 @@ public class PlayerAnimation : MonoBehaviour
         movement.OnMovementStateChange += UpdateMovementAnimation;
         movement.OnStanceChange += ChangeStanceAnimations;
         ChangeStanceAnimations(StanceType.Passive);
+    }
+
+    private void Update()
+    {
+        anim.SetFloat(xMovementHash, movement.CurrentMoveVector.x);
+        anim.SetFloat(zMovementHash, movement.CurrentMoveVector.z);
     }
 
     void UpdateMovementAnimation(MovementType newMovement)

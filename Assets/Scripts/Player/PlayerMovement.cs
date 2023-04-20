@@ -5,7 +5,7 @@ using System;
 
 public enum MovementType
 {
-    Standing, Running, Sprinting, StrafingLeft, StrafingRight
+    Standing, Running, Sprinting, Strafing
 }
 public enum StanceType
 {
@@ -18,14 +18,14 @@ public class PlayerMovement : MonoBehaviour
     public event Action<MovementType> OnMovementStateChange;
     public event Action<StanceType> OnStanceChange;
     public float CurrentMoveSpeed { get; private set; }
+    public Vector3 CurrentMoveVector => movementDirection.InverseTransformVector(movementVector);
     public float MaxRunSpeed => runSpeed;
     public StanceType CurrentStance => currentStance;
 
     [SerializeField] Transform playerModel;
     [SerializeField] Transform followTarget;
-    [SerializeField] Transform movementTransform;
+    [SerializeField] Transform movementDirection;
     [SerializeField] Transform target;
-    [SerializeField] Vector3 targetOffset;
     [SerializeField] float modelTurnSpeed = 60f;
     [SerializeField] float runSpeed = 5f;
     [SerializeField] float runAcceleration = .5f;
@@ -47,8 +47,7 @@ public class PlayerMovement : MonoBehaviour
         {
             { MovementType.Standing, new StandingState(this) },
             { MovementType.Running, new RunningState(this) },
-            { MovementType.StrafingLeft, new StrafeLeftState(this) },
-            { MovementType.StrafingRight, new StrafeRightState(this) },
+            { MovementType.Strafing, new Strafing(this) },
         };
         defaultMovementState = MovementType.Standing;
     }
@@ -103,23 +102,23 @@ public class PlayerMovement : MonoBehaviour
     void MoveLaterally(float moveSpeed)
     {
         // lateral movement
-        movementTransform.eulerAngles = new Vector3(0, followTarget.eulerAngles.y, 0);
+        movementDirection.eulerAngles = new Vector3(0, followTarget.eulerAngles.y, 0);
         movementVector = Vector3.zero;
         if (Input.GetKey(KeyCode.W))
         {
-            movementVector += movementTransform.forward;
+            movementVector += movementDirection.forward;
         }
         if (Input.GetKey(KeyCode.S))
         {
-            movementVector -= movementTransform.forward;
+            movementVector -= movementDirection.forward;
         }
         if (Input.GetKey(KeyCode.A))
         {
-            movementVector -= movementTransform.right;
+            movementVector -= movementDirection.right;
         }
         if (Input.GetKey(KeyCode.D))
         {
-            movementVector += movementTransform.right;
+            movementVector += movementDirection.right;
         }
         movementVector.Normalize();
         transform.Translate(moveSpeed * Time.deltaTime * movementVector, Space.World);
@@ -179,14 +178,21 @@ public class PlayerMovement : MonoBehaviour
 
         public override void BeforeExecution()
         {
-            print("Standing State");
+            print("Standing");
         }
 
         public override MovementType? CheckTransitions()
         {
             if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.D))
             {
-                return MovementType.Running;
+                if (movement.CurrentStance == StanceType.Combat)
+                {
+                    return MovementType.Strafing;
+                }
+                else
+                {
+                    return MovementType.Running;
+                }
             }
             return null;
         }
@@ -218,7 +224,7 @@ public class PlayerMovement : MonoBehaviour
 
         public override void BeforeExecution()
         {
-            print("Running State");
+            print("Running");
             currentRunSpeed = 0;
         }
 
@@ -226,14 +232,7 @@ public class PlayerMovement : MonoBehaviour
         {
             if (movement.CurrentStance == StanceType.Combat)
             {
-                if (Input.GetKey(KeyCode.A))
-                {
-                    return MovementType.StrafingLeft;
-                }
-                if (Input.GetKey(KeyCode.D))
-                {
-                    return MovementType.StrafingRight;
-                }
+                return MovementType.Strafing;
             }
             if (!Input.GetKey(KeyCode.W) && !Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.S) && !Input.GetKey(KeyCode.D))
             {
@@ -246,14 +245,7 @@ public class PlayerMovement : MonoBehaviour
         {
             currentRunSpeed = Mathf.Lerp(movement.CurrentMoveSpeed, movement.runSpeed, movement.runAcceleration * Time.deltaTime);
             movement.MoveLaterally(currentRunSpeed);
-            if (movement.currentStance == StanceType.Combat)
-            {
-                movement.CombatRotatePlayerModel();
-            }
-            else
-            {
-                movement.RotatePlayerModel();
-            }
+            movement.RotatePlayerModel();
         }
 
         public override void DuringPhysicsUpdate()
@@ -262,11 +254,11 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    class StrafeLeftState : MovementState
+    class Strafing : MovementState
     {
         float currentStrafeSpeed = 0f;
         
-        public StrafeLeftState(PlayerMovement movement) : base(movement)
+        public Strafing(PlayerMovement movement) : base(movement)
         {
         }
 
@@ -277,7 +269,7 @@ public class PlayerMovement : MonoBehaviour
 
         public override void BeforeExecution()
         {
-            print("Strafing Left");
+            print("Strafing");
             currentStrafeSpeed = 0f;
         }
 
@@ -285,9 +277,9 @@ public class PlayerMovement : MonoBehaviour
         {
             if (movement.currentStance != StanceType.Combat)
             {
-                return MovementType.Standing;
+                return MovementType.Running;
             }
-            if (!Input.GetKey(KeyCode.A))
+            if (!Input.GetKey(KeyCode.W) && !Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.S) && !Input.GetKey(KeyCode.D))
             {
                 return MovementType.Standing;
             }
@@ -296,52 +288,7 @@ public class PlayerMovement : MonoBehaviour
 
         public override void DuringExecution()
         {
-            currentStrafeSpeed = Mathf.Lerp(movement.CurrentMoveSpeed, movement.runSpeed, movement.runAcceleration * Time.deltaTime);
-            movement.MoveLaterally(currentStrafeSpeed);
-            movement.CombatRotatePlayerModel();
-        }
-
-        public override void DuringPhysicsUpdate()
-        {
-
-        }
-    }
-
-    class StrafeRightState : MovementState
-    {
-        float currentStrafeSpeed = 0f;
-
-        public StrafeRightState(PlayerMovement movement) : base(movement)
-        {
-        }
-
-        public override void AfterExecution()
-        {
-
-        }
-
-        public override void BeforeExecution()
-        {
-            print("Strafing Right");
-            currentStrafeSpeed = 0f;
-        }
-
-        public override MovementType? CheckTransitions()
-        {
-            if (movement.currentStance != StanceType.Combat)
-            {
-                return MovementType.Standing;
-            }
-            if (!Input.GetKey(KeyCode.D))
-            {
-                return MovementType.Standing;
-            }
-            return null;
-        }
-
-        public override void DuringExecution()
-        {
-            currentStrafeSpeed = Mathf.Lerp(movement.CurrentMoveSpeed, movement.runSpeed, movement.runAcceleration * Time.deltaTime);
+            currentStrafeSpeed = Mathf.Lerp(movement.CurrentMoveSpeed, movement.strafeSpeed, movement.runAcceleration * Time.deltaTime);
             movement.MoveLaterally(currentStrafeSpeed);
             movement.CombatRotatePlayerModel();
         }

@@ -426,13 +426,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerModel: {fileID: 4580765261606698}
   followTarget: {fileID: 1395164935}
-  movementTransform: {fileID: 1341511980}
+  movementDirection: {fileID: 1341511980}
   target: {fileID: 1326280059}
-  targetOffset: {x: 2, y: 0, z: 0}
   modelTurnSpeed: 5
   runSpeed: 5
   runAcceleration: 2
-  strafeSpeed: 1
+  strafeSpeed: 3
   strafeAcceleration: 0.5
 --- !u!114 &633915995
 MonoBehaviour:
