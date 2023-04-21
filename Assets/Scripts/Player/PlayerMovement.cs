@@ -145,7 +145,7 @@ public class PlayerMovement : MonoBehaviour
     void MoveInDirection(Vector3 direction, float speed)
     {
         direction.Normalize();
-        transform.Translate(direction * Time.deltaTime * speed, Space.Self);
+        transform.Translate(speed * Time.deltaTime * direction, Space.Self);
         CurrentMoveSpeed = speed;
     }
 
