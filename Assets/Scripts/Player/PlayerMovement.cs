@@ -33,12 +33,18 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] Transform followTarget;
     [SerializeField] Transform movementDirection;
     [SerializeField] Transform target;
+    [Header("Movement")]
     [SerializeField] float modelTurnSpeed = 60f;
     [SerializeField] float runSpeed = 5f;
     [SerializeField] float runAcceleration = .5f;
     [SerializeField] float strafeSpeed = 4f;
     [SerializeField] float strafeAcceleration = .5f;
     [SerializeField] float sprintSpeed = 10f;
+    [Header("Combat")]
+    [SerializeField] float attackLength = 2f;
+    [SerializeField] float attackMovementSpeed = 2f;
+    [SerializeField] float attackMovementStart = .2f;
+    [SerializeField] float attackMovementStop = .7f;
 
     Vector3 movementVector;
     Quaternion targetRotation, currentRotation;
@@ -57,6 +63,7 @@ public class PlayerMovement : MonoBehaviour
             { MovementType.Running, new RunningState(this) },
             { MovementType.Strafing, new StrafingState(this) },
             { MovementType.Sprinting, new SprintingState(this) },
+            { MovementType.Attacking, new AttackingState(this) },
         };
         defaultMovementState = MovementType.Standing;
     }
@@ -135,6 +142,13 @@ public class PlayerMovement : MonoBehaviour
         CurrentMoveSpeed = moveSpeed;
     }
 
+    void MoveInDirection(Vector3 direction, float speed)
+    {
+        direction.Normalize();
+        transform.Translate(direction * Time.deltaTime * speed, Space.Self);
+        CurrentMoveSpeed = speed;
+    }
+
     void CombatRotatePlayerModel()
     {
         currentRotation = playerModel.rotation;
@@ -204,6 +218,10 @@ public class PlayerMovement : MonoBehaviour
                     return MovementType.Running;
                 }
             }
+            if (Input.GetMouseButtonDown(0))
+            {
+                return MovementType.Attacking;
+            }
             return null;
         }
 
@@ -251,6 +269,10 @@ public class PlayerMovement : MonoBehaviour
             if (!Input.GetKey(KeyCode.W) && !Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.S) && !Input.GetKey(KeyCode.D))
             {
                 return MovementType.Standing;
+            }
+            if (Input.GetMouseButtonDown(0))
+            {
+                return MovementType.Attacking;
             }
             return null;
         }
@@ -331,6 +353,10 @@ public class PlayerMovement : MonoBehaviour
 
         public override MovementType? CheckTransitions()
         {
+            if (Input.GetMouseButtonDown(0))
+            {
+                return MovementType.Attacking;
+            }
             if (Input.GetKey(KeyCode.LeftShift))
             {
                 return MovementType.Sprinting;
@@ -361,6 +387,8 @@ public class PlayerMovement : MonoBehaviour
 
     class AttackingState : MovementState
     {
+        float currentAttackLength = 0f;
+
         public AttackingState(PlayerMovement movement) : base(movement)
         {
 
@@ -374,16 +402,25 @@ public class PlayerMovement : MonoBehaviour
         public override void BeforeExecution()
         {
             print("Attacking");
+            currentAttackLength = 0f;
         }
 
         public override MovementType? CheckTransitions()
         {
+            if (currentAttackLength >= movement.attackLength)
+            {
+                return MovementType.Standing;
+            }
             return null;
         }
 
         public override void DuringExecution()
         {
-
+            currentAttackLength += Time.deltaTime;
+            if (currentAttackLength >= movement.attackMovementStart && currentAttackLength < movement.attackMovementStop)
+            {
+                movement.MoveInDirection(movement.playerModel.forward, movement.attackMovementSpeed);
+            }
         }
 
         public override void DuringPhysicsUpdate()

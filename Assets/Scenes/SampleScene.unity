@@ -434,6 +434,10 @@ MonoBehaviour:
   strafeSpeed: 3
   strafeAcceleration: 0.5
   sprintSpeed: 10
+  attackLength: 0.8
+  attackMovementSpeed: 3
+  attackMovementStart: 0.3
+  attackMovementStop: 0.6
 --- !u!114 &633915995
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -446,7 +450,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c7bc7abae3835964791cb867b8e506d3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  transitionTime: 0.1
+  transitionTime: 0
   stanceTransitionSpeed: 4
 --- !u!114 &633915996
 MonoBehaviour:
