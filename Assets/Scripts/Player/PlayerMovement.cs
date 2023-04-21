@@ -45,7 +45,6 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] float attackMovementSpeed = 2f;
     [SerializeField] float attackMovementStart = .2f;
     [SerializeField] float attackMovementStop = .7f;
-    [SerializeField] float guardDirectionCheckInterval = .5f;
     [SerializeField] float guardChangeSensitivity = 3f;
 
     Vector3 movementVector;
@@ -58,7 +57,6 @@ public class PlayerMovement : MonoBehaviour
     StanceType currentStance;
 
     Vector2 lastMousePosition;
-    float currentCheckInterval = 0f;
 
     private void Awake()
     {
@@ -181,11 +179,6 @@ public class PlayerMovement : MonoBehaviour
 
     void CheckGuardDirection()
     {
-        //if (currentCheckInterval > 0)
-        //{
-        //    currentCheckInterval -= Time.deltaTime;
-        //    return;
-        //}
         GuardDirection newDirection = CurrentGuardDirection;
         Vector2 currentMousePosition = new Vector2(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"));
         Vector2 mousePosDelta = lastMousePosition - currentMousePosition;
@@ -207,7 +200,6 @@ public class PlayerMovement : MonoBehaviour
             SetGuardDirection(newDirection);
         }
         lastMousePosition = currentMousePosition;
-        currentCheckInterval = guardDirectionCheckInterval;
     }
 
     void SetGuardDirection(GuardDirection direction)
