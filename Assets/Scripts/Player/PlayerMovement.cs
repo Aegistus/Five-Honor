@@ -45,6 +45,8 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] float attackMovementSpeed = 2f;
     [SerializeField] float attackMovementStart = .2f;
     [SerializeField] float attackMovementStop = .7f;
+    [SerializeField] float guardDirectionCheckInterval = .5f;
+    [SerializeField] float guardChangeSensitivity = 3f;
 
     Vector3 movementVector;
     Quaternion targetRotation, currentRotation;
@@ -54,6 +56,9 @@ public class PlayerMovement : MonoBehaviour
 
     MovementState currentState;
     StanceType currentStance;
+
+    Vector2 lastMousePosition;
+    float currentCheckInterval = 0f;
 
     private void Awake()
     {
@@ -174,6 +179,47 @@ public class PlayerMovement : MonoBehaviour
         OnStanceChange?.Invoke(newStance);
     }
 
+    void CheckGuardDirection()
+    {
+        //if (currentCheckInterval > 0)
+        //{
+        //    currentCheckInterval -= Time.deltaTime;
+        //    return;
+        //}
+        GuardDirection newDirection = CurrentGuardDirection;
+        Vector2 currentMousePosition = new Vector2(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"));
+        Vector2 mousePosDelta = lastMousePosition - currentMousePosition;
+        if (mousePosDelta.x < -guardChangeSensitivity && mousePosDelta.y < 0)
+        {
+            newDirection = GuardDirection.Left;
+        }
+        else if (mousePosDelta.x > guardChangeSensitivity && mousePosDelta.y < 0)
+        {
+            newDirection = GuardDirection.Right;
+        }
+        else if (mousePosDelta.y > guardChangeSensitivity)
+        {
+            newDirection = GuardDirection.Top;
+        }
+
+        if (newDirection != CurrentGuardDirection)
+        {
+            SetGuardDirection(newDirection);
+        }
+        lastMousePosition = currentMousePosition;
+        currentCheckInterval = guardDirectionCheckInterval;
+    }
+
+    void SetGuardDirection(GuardDirection direction)
+    {
+        if (direction == CurrentGuardDirection)
+        {
+            return;
+        }
+        CurrentGuardDirection = direction;
+        OnGuardDirectionChange?.Invoke(CurrentGuardDirection);
+    }
+
     #region Movement States
     abstract class MovementState
     {
@@ -230,6 +276,7 @@ public class PlayerMovement : MonoBehaviour
             if (movement.currentStance == StanceType.Combat)
             {
                 movement.CombatRotatePlayerModel();
+                movement.CheckGuardDirection();
             }
         }
 
@@ -377,6 +424,7 @@ public class PlayerMovement : MonoBehaviour
             currentStrafeSpeed = Mathf.Lerp(movement.CurrentMoveSpeed, movement.strafeSpeed, movement.runAcceleration * Time.deltaTime);
             movement.MoveLaterally(currentStrafeSpeed);
             movement.CombatRotatePlayerModel();
+            movement.CheckGuardDirection();
         }
 
         public override void DuringPhysicsUpdate()

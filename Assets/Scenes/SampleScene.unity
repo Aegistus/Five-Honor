@@ -532,6 +532,8 @@ MonoBehaviour:
   attackMovementSpeed: 3
   attackMovementStart: 0.2
   attackMovementStop: 0.6
+  guardDirectionCheckInterval: 0.5
+  guardChangeSensitivity: 1
 --- !u!114 &633915995
 MonoBehaviour:
   m_ObjectHideFlags: 0
