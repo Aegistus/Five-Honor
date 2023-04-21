@@ -24,6 +24,7 @@ public class PlayerAnimation : MonoBehaviour
         { MovementType.Standing, Animator.StringToHash("Standing") },
         { MovementType.Running, Animator.StringToHash("Running") },
         { MovementType.Strafing, Animator.StringToHash("Strafing") },
+        { MovementType.Sprinting, Animator.StringToHash("Sprinting") },
     };
 
     int xMovementHash = Animator.StringToHash("XMovement");

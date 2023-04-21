@@ -31,6 +31,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] float runAcceleration = .5f;
     [SerializeField] float strafeSpeed = 4f;
     [SerializeField] float strafeAcceleration = .5f;
+    [SerializeField] float sprintSpeed = 10f;
 
     Vector3 movementVector;
     Quaternion targetRotation, currentRotation;
@@ -47,7 +48,8 @@ public class PlayerMovement : MonoBehaviour
         {
             { MovementType.Standing, new StandingState(this) },
             { MovementType.Running, new RunningState(this) },
-            { MovementType.Strafing, new Strafing(this) },
+            { MovementType.Strafing, new StrafingState(this) },
+            { MovementType.Sprinting, new SprintingState(this) },
         };
         defaultMovementState = MovementType.Standing;
     }
@@ -84,7 +86,7 @@ public class PlayerMovement : MonoBehaviour
         MovementType? returnedState = currentState.CheckTransitions();
         if (returnedState != null)
         {
-            MovementType newState = (MovementType) returnedState;
+            MovementType newState = (MovementType)returnedState;
             currentState.AfterExecution();
             currentState = movementStates[newState];
             currentState.BeforeExecution();
@@ -124,7 +126,7 @@ public class PlayerMovement : MonoBehaviour
         transform.Translate(moveSpeed * Time.deltaTime * movementVector, Space.World);
         CurrentMoveSpeed = moveSpeed;
     }
-    
+
     void CombatRotatePlayerModel()
     {
         currentRotation = playerModel.rotation;
@@ -219,7 +221,7 @@ public class PlayerMovement : MonoBehaviour
 
         public override void AfterExecution()
         {
-            
+
         }
 
         public override void BeforeExecution()
@@ -230,6 +232,10 @@ public class PlayerMovement : MonoBehaviour
 
         public override MovementType? CheckTransitions()
         {
+            if (Input.GetKey(KeyCode.LeftShift))
+            {
+                return MovementType.Sprinting;
+            }
             if (movement.CurrentStance == StanceType.Combat)
             {
                 return MovementType.Strafing;
@@ -250,15 +256,57 @@ public class PlayerMovement : MonoBehaviour
 
         public override void DuringPhysicsUpdate()
         {
-            
+
         }
     }
 
-    class Strafing : MovementState
+    class SprintingState : MovementState
+    {
+        float currentSprintSpeed;
+
+        public SprintingState(PlayerMovement movement) : base(movement)
+        {
+
+        }
+
+        public override void AfterExecution()
+        {
+
+        }
+
+        public override void BeforeExecution()
+        {
+            currentSprintSpeed = 0f;
+            print("Sprinting");
+        }
+
+        public override MovementType? CheckTransitions()
+        {
+            if (!Input.GetKey(KeyCode.W) && !Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.S) && !Input.GetKey(KeyCode.D))
+            {
+                return MovementType.Standing;
+            }
+            return null;
+        }
+
+        public override void DuringExecution()
+        {
+            currentSprintSpeed = Mathf.Lerp(movement.CurrentMoveSpeed, movement.sprintSpeed, movement.runAcceleration * Time.deltaTime);
+            movement.MoveLaterally(currentSprintSpeed);
+            movement.RotatePlayerModel();
+        }
+
+        public override void DuringPhysicsUpdate()
+        {
+
+        }
+    }
+
+    class StrafingState : MovementState
     {
         float currentStrafeSpeed = 0f;
         
-        public Strafing(PlayerMovement movement) : base(movement)
+        public StrafingState(PlayerMovement movement) : base(movement)
         {
         }
 
@@ -275,6 +323,10 @@ public class PlayerMovement : MonoBehaviour
 
         public override MovementType? CheckTransitions()
         {
+            if (Input.GetKey(KeyCode.LeftShift))
+            {
+                return MovementType.Sprinting;
+            }
             if (movement.currentStance != StanceType.Combat)
             {
                 return MovementType.Running;
