@@ -5,11 +5,16 @@ using System;
 
 public enum MovementType
 {
-    Standing, Running, Sprinting, Strafing
+    Standing, Running, Sprinting, Strafing, Attacking
 }
 public enum StanceType
 {
     Passive, Combat
+}
+
+public enum GuardDirection
+{
+    None, Top, Left, Right
 }
 
 public class PlayerMovement : MonoBehaviour
@@ -17,10 +22,12 @@ public class PlayerMovement : MonoBehaviour
     public MovementType CurrentStateType { get; private set; }
     public event Action<MovementType> OnMovementStateChange;
     public event Action<StanceType> OnStanceChange;
+    public event Action<GuardDirection> OnGuardDirectionChange;
     public float CurrentMoveSpeed { get; private set; }
     public Vector3 CurrentMoveVector => movementDirection.InverseTransformVector(movementVector);
     public float MaxRunSpeed => runSpeed;
     public StanceType CurrentStance => currentStance;
+    public GuardDirection CurrentGuardDirection { get; private set; } = GuardDirection.Left;
 
     [SerializeField] Transform playerModel;
     [SerializeField] Transform followTarget;
@@ -58,6 +65,7 @@ public class PlayerMovement : MonoBehaviour
     {
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+        OnGuardDirectionChange?.Invoke(CurrentGuardDirection);
     }
 
     private void Update()
@@ -343,6 +351,39 @@ public class PlayerMovement : MonoBehaviour
             currentStrafeSpeed = Mathf.Lerp(movement.CurrentMoveSpeed, movement.strafeSpeed, movement.runAcceleration * Time.deltaTime);
             movement.MoveLaterally(currentStrafeSpeed);
             movement.CombatRotatePlayerModel();
+        }
+
+        public override void DuringPhysicsUpdate()
+        {
+
+        }
+    }
+
+    class AttackingState : MovementState
+    {
+        public AttackingState(PlayerMovement movement) : base(movement)
+        {
+
+        }
+
+        public override void AfterExecution()
+        {
+
+        }
+
+        public override void BeforeExecution()
+        {
+            print("Attacking");
+        }
+
+        public override MovementType? CheckTransitions()
+        {
+            return null;
+        }
+
+        public override void DuringExecution()
+        {
+
         }
 
         public override void DuringPhysicsUpdate()

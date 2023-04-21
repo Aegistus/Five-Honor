@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -25,10 +26,12 @@ public class PlayerAnimation : MonoBehaviour
         { MovementType.Running, Animator.StringToHash("Running") },
         { MovementType.Strafing, Animator.StringToHash("Strafing") },
         { MovementType.Sprinting, Animator.StringToHash("Sprinting") },
+        { MovementType.Attacking, Animator.StringToHash("Attacking") },
     };
 
     int xMovementHash = Animator.StringToHash("XMovement");
     int zMovementHash = Animator.StringToHash("ZMovement");
+    int guardDirectionHash = Animator.StringToHash("GuardDirection");
 
     private void Awake()
     {
@@ -36,6 +39,7 @@ public class PlayerAnimation : MonoBehaviour
         anim = GetComponentInChildren<Animator>();
         movement.OnMovementStateChange += UpdateMovementAnimation;
         movement.OnStanceChange += ChangeStanceAnimations;
+        movement.OnGuardDirectionChange += ChangeGuardStance;
         ChangeStanceAnimations(StanceType.Passive);
     }
 
@@ -94,5 +98,10 @@ public class PlayerAnimation : MonoBehaviour
             }
             yield return null;
         }
+    }
+
+    private void ChangeGuardStance(GuardDirection direction)
+    {
+        anim.SetInteger(guardDirectionHash, (int)direction);
     }
 }
