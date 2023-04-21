@@ -456,6 +456,7 @@ public class PlayerMovement : MonoBehaviour
 
         public override void DuringExecution()
         {
+            movement.CheckGuardDirection();
             currentAttackLength += Time.deltaTime;
             if (currentAttackLength >= movement.attackMovementStart && currentAttackLength < movement.attackMovementStop)
             {

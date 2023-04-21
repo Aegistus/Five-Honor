@@ -15,9 +15,6 @@ public class PlayerIK : MonoBehaviour
     [SerializeField] Transform leftHand;
     [SerializeField] bool switchHandInPassive = false;
 
-    Hand rightWeaponParent = Hand.None;
-    Hand leftWeaponParent = Hand.None;
-
     bool leftIK;
     bool rightIK;
     Animator anim;
@@ -37,45 +34,39 @@ public class PlayerIK : MonoBehaviour
 
     private void WeaponChangeHands(StanceType newStance)
     {
-        if (newStance == StanceType.Combat)
+        if (rightWeapon)
         {
-            if (rightWeapon.leftIKTarget)
+            if (newStance == StanceType.Combat && rightWeapon.leftIKTarget)
             {
                 leftIK = true;
             }
+            else
+            {
+                leftIK = false;
+            }
             rightWeapon.transform.SetParent(rightHand);
-            rightWeaponParent = Hand.RightHand;
             rightWeapon.transform.localRotation = Quaternion.Euler(rightWeapon.rightHandRotation);
             rightWeapon.transform.localPosition = rightWeapon.rightHandOffset;
-            if (leftWeapon)
-            {
-                leftWeapon.transform.SetParent(leftHand);
-                leftWeaponParent = Hand.LeftHand;
-                leftWeapon.transform.localRotation = Quaternion.Euler(leftWeapon.leftHandRotation);
-                leftWeapon.transform.localPosition = leftWeapon.leftHandOffset;
-            }
         }
-        else if (newStance == StanceType.Passive)
+        if (leftWeapon)
         {
-            leftIK = false;
-            rightWeapon.transform.SetParent(leftHand);
-            rightWeaponParent = Hand.LeftHand;
-            rightWeapon.transform.localRotation = Quaternion.Euler(rightWeapon.leftHandRotation);
-            rightWeapon.transform.localPosition = rightWeapon.leftHandOffset;
-            if (leftWeapon)
-            {
-                leftWeapon.transform.SetParent(leftHand);
-                leftWeaponParent = Hand.LeftHand;
-                leftWeapon.transform.localRotation = Quaternion.Euler(leftWeapon.leftHandRotation);
-                leftWeapon.transform.localPosition = leftWeapon.leftHandOffset;
-            }
+            leftWeapon.transform.SetParent(leftHand);
+            leftWeapon.transform.localRotation = Quaternion.Euler(leftWeapon.leftHandRotation);
+            leftWeapon.transform.localPosition = leftWeapon.leftHandOffset;
         }
     }
 
     private void Update()
     {
-        UpdateWeaponTransformToHand(rightWeapon, Hand.RightHand);
-        UpdateWeaponTransformToHand(leftWeapon, Hand.LeftHand);
+        if (rightWeapon)
+        {
+            UpdateWeaponTransformToHand(rightWeapon, Hand.RightHand);
+
+        }
+        if (leftWeapon)
+        {
+            UpdateWeaponTransformToHand(leftWeapon, Hand.LeftHand);
+        }
     }
 
     private void OnAnimatorIK(int layerIndex)
