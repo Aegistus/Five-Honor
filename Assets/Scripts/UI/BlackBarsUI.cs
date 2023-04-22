@@ -13,7 +13,7 @@ public class BlackBarsUI : MonoBehaviour
     {
         upper.SetActive(false);
         lower.SetActive(false);
-        movement = FindObjectOfType<AgentMovement>();
+        movement = FindObjectOfType<PlayerController>().GetComponent<AgentMovement>();
         movement.OnStanceChange += UpdateBlackBars;
     }
 

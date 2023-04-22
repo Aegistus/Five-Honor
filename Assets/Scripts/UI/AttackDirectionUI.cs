@@ -13,7 +13,7 @@ public class AttackDirectionUI : MonoBehaviour
 
     private void Awake()
     {
-        movement = FindObjectOfType<AgentMovement>();
+        movement = FindObjectOfType<PlayerController>().GetComponent<AgentMovement>();
         movement.OnStanceChange += StanceChange;
         movement.OnGuardDirectionChange += ChangeGuardDirection;
         uiElement.SetActive(false);
