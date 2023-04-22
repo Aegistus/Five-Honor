@@ -27,11 +27,13 @@ public class PlayerAnimation : MonoBehaviour
         { MovementType.Strafing, Animator.StringToHash("Strafing") },
         { MovementType.Sprinting, Animator.StringToHash("Sprinting") },
         { MovementType.Attacking, Animator.StringToHash("Attacking") },
+        { MovementType.Dodging, Animator.StringToHash("Dodging") },
     };
 
     int xMovementHash = Animator.StringToHash("XMovement");
     int zMovementHash = Animator.StringToHash("ZMovement");
     int guardDirectionHash = Animator.StringToHash("GuardDirection");
+    int dodgeDirectionHash = Animator.StringToHash("DodgeRight");
 
     private void Awake()
     {
@@ -40,6 +42,7 @@ public class PlayerAnimation : MonoBehaviour
         movement.OnMovementStateChange += UpdateMovementAnimation;
         movement.OnStanceChange += ChangeStanceAnimations;
         movement.OnGuardDirectionChange += ChangeGuardStance;
+        movement.OnDodge += (bool value) => anim.SetBool(dodgeDirectionHash, value);
         ChangeStanceAnimations(StanceType.Passive);
     }
 

@@ -5,7 +5,7 @@ using System;
 
 public enum MovementType
 {
-    Standing, Running, Sprinting, Strafing, Attacking
+    Standing, Running, Sprinting, Strafing, Attacking, Dodging
 }
 public enum StanceType
 {
@@ -23,6 +23,7 @@ public class PlayerMovement : MonoBehaviour
     public event Action<MovementType> OnMovementStateChange;
     public event Action<StanceType> OnStanceChange;
     public event Action<GuardDirection> OnGuardDirectionChange;
+    public event Action<bool> OnDodge;
     public float CurrentMoveSpeed { get; private set; }
     public Vector3 CurrentMoveVector => movementDirection.InverseTransformVector(movementVector);
     public float MaxRunSpeed => runSpeed;
@@ -40,6 +41,8 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] float strafeSpeed = 4f;
     [SerializeField] float strafeAcceleration = .5f;
     [SerializeField] float sprintSpeed = 10f;
+    [SerializeField] float dodgeSpeed = 5f;
+    [SerializeField] float dodgeTime = .5f;
     [Header("Combat")]
     [SerializeField] float attackLength = 2f;
     [SerializeField] float attackMovementSpeed = 2f;
@@ -67,6 +70,7 @@ public class PlayerMovement : MonoBehaviour
             { MovementType.Strafing, new StrafingState(this) },
             { MovementType.Sprinting, new SprintingState(this) },
             { MovementType.Attacking, new AttackingState(this) },
+            { MovementType.Dodging, new DodgingState(this) },
         };
         defaultMovementState = MovementType.Standing;
     }
@@ -119,6 +123,10 @@ public class PlayerMovement : MonoBehaviour
         currentState?.DuringPhysicsUpdate();
     }
 
+    /// <summary>
+    /// Move player laterally in world space
+    /// </summary>
+    /// <param name="moveSpeed"></param>
     void MoveLaterally(float moveSpeed)
     {
         // lateral movement
@@ -247,6 +255,11 @@ public class PlayerMovement : MonoBehaviour
         {
             if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.D))
             {
+                // dodge
+                if (Input.GetKeyDown(KeyCode.Space))
+                {
+                    return MovementType.Dodging;
+                }
                 if (movement.CurrentStance == StanceType.Combat)
                 {
                     return MovementType.Strafing;
@@ -392,6 +405,11 @@ public class PlayerMovement : MonoBehaviour
 
         public override MovementType? CheckTransitions()
         {
+            // dodge
+            if ((Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D)) && Input.GetKeyDown(KeyCode.Space))
+            {
+                return MovementType.Dodging;
+            }
             if (Input.GetMouseButtonDown(0))
             {
                 return MovementType.Attacking;
@@ -462,6 +480,67 @@ public class PlayerMovement : MonoBehaviour
             {
                 movement.MoveInDirection(movement.playerModel.forward, movement.attackMovementSpeed);
             }
+        }
+
+        public override void DuringPhysicsUpdate()
+        {
+
+        }
+    }
+
+    class DodgingState : MovementState
+    {
+        bool jumpRight;
+        float currentDodgeTime;
+
+        public DodgingState(PlayerMovement movement) : base(movement)
+        {
+
+        }
+
+        public override void AfterExecution()
+        {
+
+        }
+
+        public override void BeforeExecution()
+        {
+            print("Dodging");
+            if (Input.GetKey(KeyCode.D))
+            {
+                jumpRight = true;
+                movement?.OnDodge.Invoke(jumpRight);
+            }
+            else if (Input.GetKey(KeyCode.A))
+            {
+                jumpRight = false;
+                movement?.OnDodge.Invoke(jumpRight);
+            }
+            currentDodgeTime = 0;
+        }
+
+        public override MovementType? CheckTransitions()
+        {
+            if (currentDodgeTime >= movement.dodgeTime)
+            {
+                return MovementType.Standing;
+            }
+            return null;
+        }
+
+        public override void DuringExecution()
+        {
+            currentDodgeTime += Time.deltaTime;
+            if (jumpRight)
+            {
+                movement.MoveInDirection(movement.playerModel.right, movement.dodgeSpeed);
+            }
+            else
+            {
+                movement.MoveInDirection(-movement.playerModel.right, movement.dodgeSpeed);
+            }
+            movement.CombatRotatePlayerModel();
+            movement.CheckGuardDirection();
         }
 
         public override void DuringPhysicsUpdate()
