@@ -549,6 +549,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 633915993}
+  - component: {fileID: 633915997}
   - component: {fileID: 633915994}
   - component: {fileID: 633915995}
   - component: {fileID: 633915996}
@@ -591,7 +592,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b6a176b5a1d11ea469418d616d49a50f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerModel: {fileID: 4580765261606698}
+  agentModel: {fileID: 4580765261606698}
   followTarget: {fileID: 1395164935}
   movementDirection: {fileID: 1341511980}
   target: {fileID: 1326280059}
@@ -607,7 +608,6 @@ MonoBehaviour:
   attackMovementSpeed: 3
   attackMovementStart: 0.2
   attackMovementStop: 0.6
-  guardChangeSensitivity: 0.5
 --- !u!114 &633915995
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -639,6 +639,19 @@ MonoBehaviour:
   playerFollowTarget: {fileID: 1395164935}
   enemyTarget: {fileID: 1326280059}
   mouseSensitivity: 1000
+--- !u!114 &633915997
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 633915992}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8f13aa01eaa0ddb48bd4f06e33cb4b8d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  guardChangeSensitivity: 0.5
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0

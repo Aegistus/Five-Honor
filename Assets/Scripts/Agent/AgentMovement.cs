@@ -48,7 +48,8 @@ public class AgentMovement : MonoBehaviour
     [SerializeField] float attackMovementSpeed = 2f;
     [SerializeField] float attackMovementStart = .2f;
     [SerializeField] float attackMovementStop = .7f;
-    [SerializeField] float guardChangeSensitivity = 3f;
+
+    AgentController controller;
 
     Vector3 movementVector;
     Quaternion targetRotation, currentRotation;
@@ -59,10 +60,9 @@ public class AgentMovement : MonoBehaviour
     MovementState currentState;
     StanceType currentStance;
 
-    Vector2 lastMousePosition;
-
     private void Awake()
     {
+        controller = GetComponent<AgentController>();
         movementStates = new Dictionary<MovementType, MovementState>()
         {
             { MovementType.Standing, new StandingState(this) },
@@ -77,15 +77,13 @@ public class AgentMovement : MonoBehaviour
 
     private void Start()
     {
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
         OnGuardDirectionChange?.Invoke(CurrentGuardDirection);
     }
 
     private void Update()
     {
         // change stance
-        if (Input.GetKeyDown(KeyCode.LeftControl))
+        if (controller.StanceChange)
         {
             if (currentStance == StanceType.Passive)
             {
@@ -132,19 +130,19 @@ public class AgentMovement : MonoBehaviour
         // lateral movement
         movementDirection.eulerAngles = new Vector3(0, followTarget.eulerAngles.y, 0);
         movementVector = Vector3.zero;
-        if (Input.GetKey(KeyCode.W))
+        if (controller.Forwards)
         {
             movementVector += movementDirection.forward;
         }
-        if (Input.GetKey(KeyCode.S))
+        if (controller.Backwards)
         {
             movementVector -= movementDirection.forward;
         }
-        if (Input.GetKey(KeyCode.A))
+        if (controller.Left)
         {
             movementVector -= movementDirection.right;
         }
-        if (Input.GetKey(KeyCode.D))
+        if (controller.Right)
         {
             movementVector += movementDirection.right;
         }
@@ -185,34 +183,9 @@ public class AgentMovement : MonoBehaviour
         OnStanceChange?.Invoke(newStance);
     }
 
-    void CheckGuardDirection()
-    {
-        GuardDirection newDirection = CurrentGuardDirection;
-        Vector2 currentMousePosition = new Vector2(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"));
-        Vector2 mousePosDelta = lastMousePosition - currentMousePosition;
-        if (mousePosDelta.x < -guardChangeSensitivity && mousePosDelta.y < guardChangeSensitivity)
-        {
-            newDirection = GuardDirection.Left;
-        }
-        else if (mousePosDelta.x > guardChangeSensitivity && mousePosDelta.y < guardChangeSensitivity)
-        {
-            newDirection = GuardDirection.Right;
-        }
-        else if (mousePosDelta.y > guardChangeSensitivity)
-        {
-            newDirection = GuardDirection.Top;
-        }
-
-        if (newDirection != CurrentGuardDirection)
-        {
-            SetGuardDirection(newDirection);
-        }
-        lastMousePosition = currentMousePosition;
-    }
-
     void SetGuardDirection(GuardDirection direction)
     {
-        if (direction == CurrentGuardDirection)
+        if (direction == CurrentGuardDirection || direction == GuardDirection.None)
         {
             return;
         }
@@ -253,10 +226,10 @@ public class AgentMovement : MonoBehaviour
 
         public override MovementType? CheckTransitions()
         {
-            if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.D))
+            if (movement.controller.MovementInput)
             {
                 // dodge
-                if (Input.GetKeyDown(KeyCode.Space))
+                if (movement.controller.Dodge)
                 {
                     return MovementType.Dodging;
                 }
@@ -269,7 +242,7 @@ public class AgentMovement : MonoBehaviour
                     return MovementType.Running;
                 }
             }
-            if (Input.GetMouseButtonDown(0))
+            if (movement.controller.LightAttack)
             {
                 return MovementType.Attacking;
             }
@@ -281,7 +254,7 @@ public class AgentMovement : MonoBehaviour
             if (movement.currentStance == StanceType.Combat)
             {
                 movement.CombatRotateAgentModel();
-                movement.CheckGuardDirection();
+                movement.SetGuardDirection(movement.controller.GetGuardDirection());
             }
         }
 
@@ -310,7 +283,7 @@ public class AgentMovement : MonoBehaviour
 
         public override MovementType? CheckTransitions()
         {
-            if (Input.GetKey(KeyCode.LeftShift))
+            if (movement.controller.Sprint)
             {
                 return MovementType.Sprinting;
             }
@@ -318,11 +291,11 @@ public class AgentMovement : MonoBehaviour
             {
                 return MovementType.Strafing;
             }
-            if (!Input.GetKey(KeyCode.W) && !Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.S) && !Input.GetKey(KeyCode.D))
+            if (movement.controller.NoMovementInput)
             {
                 return MovementType.Standing;
             }
-            if (Input.GetMouseButtonDown(0))
+            if (movement.controller.LightAttack)
             {
                 return MovementType.Attacking;
             }
@@ -364,7 +337,7 @@ public class AgentMovement : MonoBehaviour
 
         public override MovementType? CheckTransitions()
         {
-            if (!Input.GetKey(KeyCode.W) && !Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.S) && !Input.GetKey(KeyCode.D))
+            if (movement.controller.NoMovementInput)
             {
                 return MovementType.Standing;
             }
@@ -406,15 +379,15 @@ public class AgentMovement : MonoBehaviour
         public override MovementType? CheckTransitions()
         {
             // dodge
-            if ((Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D)) && Input.GetKeyDown(KeyCode.Space))
+            if ((movement.controller.Left || movement.controller.Right) && movement.controller.Dodge)
             {
                 return MovementType.Dodging;
             }
-            if (Input.GetMouseButtonDown(0))
+            if (movement.controller.LightAttack)
             {
                 return MovementType.Attacking;
             }
-            if (Input.GetKey(KeyCode.LeftShift))
+            if (movement.controller.Sprint)
             {
                 return MovementType.Sprinting;
             }
@@ -422,7 +395,7 @@ public class AgentMovement : MonoBehaviour
             {
                 return MovementType.Running;
             }
-            if (!Input.GetKey(KeyCode.W) && !Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.S) && !Input.GetKey(KeyCode.D))
+            if (movement.controller.NoMovementInput)
             {
                 return MovementType.Standing;
             }
@@ -434,7 +407,7 @@ public class AgentMovement : MonoBehaviour
             currentStrafeSpeed = Mathf.Lerp(movement.CurrentMoveSpeed, movement.strafeSpeed, movement.runAcceleration * Time.deltaTime);
             movement.MoveLaterally(currentStrafeSpeed);
             movement.CombatRotateAgentModel();
-            movement.CheckGuardDirection();
+            movement.SetGuardDirection(movement.controller.GetGuardDirection());
         }
 
         public override void DuringPhysicsUpdate()
@@ -474,7 +447,7 @@ public class AgentMovement : MonoBehaviour
 
         public override void DuringExecution()
         {
-            movement.CheckGuardDirection();
+            movement.SetGuardDirection(movement.controller.GetGuardDirection());
             currentAttackLength += Time.deltaTime;
             if (currentAttackLength >= movement.attackMovementStart && currentAttackLength < movement.attackMovementStop)
             {
@@ -506,12 +479,12 @@ public class AgentMovement : MonoBehaviour
         public override void BeforeExecution()
         {
             print("Dodging");
-            if (Input.GetKey(KeyCode.D))
+            if (movement.controller.Right)
             {
                 jumpRight = true;
                 movement?.OnDodge.Invoke(jumpRight);
             }
-            else if (Input.GetKey(KeyCode.A))
+            else if (movement.controller.Left)
             {
                 jumpRight = false;
                 movement?.OnDodge.Invoke(jumpRight);
@@ -540,7 +513,7 @@ public class AgentMovement : MonoBehaviour
                 movement.MoveInDirection(-movement.agentModel.right, movement.dodgeSpeed);
             }
             movement.CombatRotateAgentModel();
-            movement.CheckGuardDirection();
+            movement.SetGuardDirection(movement.controller.GetGuardDirection());
         }
 
         public override void DuringPhysicsUpdate()

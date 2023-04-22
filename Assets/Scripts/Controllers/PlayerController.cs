@@ -4,9 +4,15 @@ using UnityEngine;
 
 public class PlayerController : AgentController
 {
-    [SerializeField] float guardChangeSensitivity = 3f;
+    [SerializeField] float guardChangeSensitivity = .5f;
 
     Vector2 lastMousePosition;
+
+    private void Start()
+    {
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+    }
 
     private void Update()
     {
@@ -14,8 +20,9 @@ public class PlayerController : AgentController
         Backwards = Input.GetKey(KeyCode.S);
         Left = Input.GetKey(KeyCode.A);
         Right = Input.GetKey(KeyCode.D);
-        Dodge = Input.GetKey(KeyCode.Space);
+        Dodge = Input.GetKeyDown(KeyCode.Space);
         Sprint = Input.GetKey(KeyCode.LeftShift);
+        StanceChange = Input.GetKeyDown(KeyCode.LeftControl);
         LightAttack = Input.GetMouseButton(0);
     }
 
