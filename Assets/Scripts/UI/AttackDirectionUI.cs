@@ -9,11 +9,11 @@ public class AttackDirectionUI : MonoBehaviour
     [SerializeField] GameObject left;
     [SerializeField] GameObject right;
 
-    PlayerMovement movement;
+    AgentMovement movement;
 
     private void Awake()
     {
-        movement = FindObjectOfType<PlayerMovement>();
+        movement = FindObjectOfType<AgentMovement>();
         movement.OnStanceChange += StanceChange;
         movement.OnGuardDirectionChange += ChangeGuardDirection;
         uiElement.SetActive(false);

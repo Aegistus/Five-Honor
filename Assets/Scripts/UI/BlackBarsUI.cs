@@ -7,13 +7,13 @@ public class BlackBarsUI : MonoBehaviour
     [SerializeField] GameObject upper;
     [SerializeField] GameObject lower;
 
-    PlayerMovement movement;
+    AgentMovement movement;
 
     private void Start()
     {
         upper.SetActive(false);
         lower.SetActive(false);
-        movement = FindObjectOfType<PlayerMovement>();
+        movement = FindObjectOfType<AgentMovement>();
         movement.OnStanceChange += UpdateBlackBars;
     }
 

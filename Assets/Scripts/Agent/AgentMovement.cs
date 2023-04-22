@@ -17,7 +17,7 @@ public enum GuardDirection
     None, Top, Left, Right
 }
 
-public class PlayerMovement : MonoBehaviour
+public class AgentMovement : MonoBehaviour
 {
     public MovementType CurrentStateType { get; private set; }
     public event Action<MovementType> OnMovementStateChange;
@@ -30,7 +30,7 @@ public class PlayerMovement : MonoBehaviour
     public StanceType CurrentStance => currentStance;
     public GuardDirection CurrentGuardDirection { get; private set; } = GuardDirection.Left;
 
-    [SerializeField] Transform playerModel;
+    [SerializeField] Transform agentModel;
     [SerializeField] Transform followTarget;
     [SerializeField] Transform movementDirection;
     [SerializeField] Transform target;
@@ -160,23 +160,23 @@ public class PlayerMovement : MonoBehaviour
         CurrentMoveSpeed = speed;
     }
 
-    void CombatRotatePlayerModel()
+    void CombatRotateAgentModel()
     {
-        currentRotation = playerModel.rotation;
-        playerModel.LookAt(target);
-        targetRotation.eulerAngles = new Vector3(0, playerModel.eulerAngles.y, 0);
-        playerModel.rotation = currentRotation;
-        playerModel.rotation = Quaternion.Lerp(currentRotation, targetRotation, modelTurnSpeed * Time.deltaTime);
+        currentRotation = agentModel.rotation;
+        agentModel.LookAt(target);
+        targetRotation.eulerAngles = new Vector3(0, agentModel.eulerAngles.y, 0);
+        agentModel.rotation = currentRotation;
+        agentModel.rotation = Quaternion.Lerp(currentRotation, targetRotation, modelTurnSpeed * Time.deltaTime);
     }
 
-    void RotatePlayerModel()
+    void RotateAgentModel()
     {
         // model rotation
-        currentRotation = playerModel.rotation;
-        playerModel.LookAt(playerModel.position + movementVector);
-        targetRotation.eulerAngles = new Vector3(0, playerModel.eulerAngles.y, 0);
-        playerModel.rotation = currentRotation;
-        playerModel.rotation = Quaternion.Lerp(currentRotation, targetRotation, modelTurnSpeed * Time.deltaTime);
+        currentRotation = agentModel.rotation;
+        agentModel.LookAt(agentModel.position + movementVector);
+        targetRotation.eulerAngles = new Vector3(0, agentModel.eulerAngles.y, 0);
+        agentModel.rotation = currentRotation;
+        agentModel.rotation = Quaternion.Lerp(currentRotation, targetRotation, modelTurnSpeed * Time.deltaTime);
     }
 
     void ChangeStance(StanceType newStance)
@@ -223,9 +223,9 @@ public class PlayerMovement : MonoBehaviour
     #region Movement States
     abstract class MovementState
     {
-        protected PlayerMovement movement;
+        protected AgentMovement movement;
 
-        public MovementState(PlayerMovement movement)
+        public MovementState(AgentMovement movement)
         {
             this.movement = movement;
         }
@@ -239,7 +239,7 @@ public class PlayerMovement : MonoBehaviour
 
     class StandingState : MovementState
     {
-        public StandingState(PlayerMovement movement) : base(movement) { }
+        public StandingState(AgentMovement movement) : base(movement) { }
 
         public override void AfterExecution()
         {
@@ -280,7 +280,7 @@ public class PlayerMovement : MonoBehaviour
         {
             if (movement.currentStance == StanceType.Combat)
             {
-                movement.CombatRotatePlayerModel();
+                movement.CombatRotateAgentModel();
                 movement.CheckGuardDirection();
             }
         }
@@ -295,7 +295,7 @@ public class PlayerMovement : MonoBehaviour
     {
         float currentRunSpeed = 0f;
 
-        public RunningState(PlayerMovement movement) : base(movement) { }
+        public RunningState(AgentMovement movement) : base(movement) { }
 
         public override void AfterExecution()
         {
@@ -333,7 +333,7 @@ public class PlayerMovement : MonoBehaviour
         {
             currentRunSpeed = Mathf.Lerp(movement.CurrentMoveSpeed, movement.runSpeed, movement.runAcceleration * Time.deltaTime);
             movement.MoveLaterally(currentRunSpeed);
-            movement.RotatePlayerModel();
+            movement.RotateAgentModel();
         }
 
         public override void DuringPhysicsUpdate()
@@ -346,7 +346,7 @@ public class PlayerMovement : MonoBehaviour
     {
         float currentSprintSpeed;
 
-        public SprintingState(PlayerMovement movement) : base(movement)
+        public SprintingState(AgentMovement movement) : base(movement)
         {
 
         }
@@ -375,7 +375,7 @@ public class PlayerMovement : MonoBehaviour
         {
             currentSprintSpeed = Mathf.Lerp(movement.CurrentMoveSpeed, movement.sprintSpeed, movement.runAcceleration * Time.deltaTime);
             movement.MoveLaterally(currentSprintSpeed);
-            movement.RotatePlayerModel();
+            movement.RotateAgentModel();
         }
 
         public override void DuringPhysicsUpdate()
@@ -388,7 +388,7 @@ public class PlayerMovement : MonoBehaviour
     {
         float currentStrafeSpeed = 0f;
         
-        public StrafingState(PlayerMovement movement) : base(movement)
+        public StrafingState(AgentMovement movement) : base(movement)
         {
         }
 
@@ -433,7 +433,7 @@ public class PlayerMovement : MonoBehaviour
         {
             currentStrafeSpeed = Mathf.Lerp(movement.CurrentMoveSpeed, movement.strafeSpeed, movement.runAcceleration * Time.deltaTime);
             movement.MoveLaterally(currentStrafeSpeed);
-            movement.CombatRotatePlayerModel();
+            movement.CombatRotateAgentModel();
             movement.CheckGuardDirection();
         }
 
@@ -447,7 +447,7 @@ public class PlayerMovement : MonoBehaviour
     {
         float currentAttackLength = 0f;
 
-        public AttackingState(PlayerMovement movement) : base(movement)
+        public AttackingState(AgentMovement movement) : base(movement)
         {
 
         }
@@ -478,7 +478,7 @@ public class PlayerMovement : MonoBehaviour
             currentAttackLength += Time.deltaTime;
             if (currentAttackLength >= movement.attackMovementStart && currentAttackLength < movement.attackMovementStop)
             {
-                movement.MoveInDirection(movement.playerModel.forward, movement.attackMovementSpeed);
+                movement.MoveInDirection(movement.agentModel.forward, movement.attackMovementSpeed);
             }
         }
 
@@ -493,7 +493,7 @@ public class PlayerMovement : MonoBehaviour
         bool jumpRight;
         float currentDodgeTime;
 
-        public DodgingState(PlayerMovement movement) : base(movement)
+        public DodgingState(AgentMovement movement) : base(movement)
         {
 
         }
@@ -533,13 +533,13 @@ public class PlayerMovement : MonoBehaviour
             currentDodgeTime += Time.deltaTime;
             if (jumpRight)
             {
-                movement.MoveInDirection(movement.playerModel.right, movement.dodgeSpeed);
+                movement.MoveInDirection(movement.agentModel.right, movement.dodgeSpeed);
             }
             else
             {
-                movement.MoveInDirection(-movement.playerModel.right, movement.dodgeSpeed);
+                movement.MoveInDirection(-movement.agentModel.right, movement.dodgeSpeed);
             }
-            movement.CombatRotatePlayerModel();
+            movement.CombatRotateAgentModel();
             movement.CheckGuardDirection();
         }
 

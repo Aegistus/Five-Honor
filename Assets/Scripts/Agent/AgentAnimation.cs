@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerAnimation : MonoBehaviour
+public class AgentAnimation : MonoBehaviour
 {
     [SerializeField] float transitionTime = .5f;
     [SerializeField] float stanceTransitionSpeed = 2f;
@@ -17,7 +17,7 @@ public class PlayerAnimation : MonoBehaviour
         {StanceType.Combat, 1},
         {StanceType.Passive, 2 }
     };
-    PlayerMovement movement;
+    AgentMovement movement;
     Animator anim;
 
     Dictionary<MovementType, int> movementTypeToAnimation = new Dictionary<MovementType, int>()
@@ -37,7 +37,7 @@ public class PlayerAnimation : MonoBehaviour
 
     private void Awake()
     {
-        movement = GetComponent<PlayerMovement>();
+        movement = GetComponent<AgentMovement>();
         anim = GetComponentInChildren<Animator>();
         movement.OnMovementStateChange += UpdateMovementAnimation;
         movement.OnStanceChange += ChangeStanceAnimations;

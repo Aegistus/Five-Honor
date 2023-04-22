@@ -7,7 +7,7 @@ enum Hand
     None, LeftHand, RightHand
 }
 
-public class PlayerIK : MonoBehaviour
+public class AgentIK : MonoBehaviour
 {
     [SerializeField] WeaponIK leftWeapon;
     [SerializeField] WeaponIK rightWeapon;
@@ -18,12 +18,12 @@ public class PlayerIK : MonoBehaviour
     bool leftIK;
     bool rightIK;
     Animator anim;
-    PlayerMovement movement;
+    AgentMovement movement;
 
     private void Awake()
     {
         anim = GetComponentInChildren<Animator>();
-        movement = GetComponentInParent<PlayerMovement>();
+        movement = GetComponentInParent<AgentMovement>();
         movement.OnStanceChange += WeaponChangeHands;
     }
 

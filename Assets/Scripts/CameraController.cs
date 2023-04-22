@@ -10,11 +10,11 @@ public class CameraController : MonoBehaviour
     [SerializeField] Transform enemyTarget;
     [SerializeField] float mouseSensitivity = 1000f;
 
-    PlayerMovement movement;
+    AgentMovement movement;
 
     private void Awake()
     {
-        movement = FindObjectOfType<PlayerMovement>();
+        movement = FindObjectOfType<AgentMovement>();
         movement.OnStanceChange += ChangeStanceCamera;
     }
 
