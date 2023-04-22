@@ -14,7 +14,7 @@ public class CameraController : MonoBehaviour
 
     private void Awake()
     {
-        movement = FindObjectOfType<AgentMovement>();
+        movement = FindObjectOfType<PlayerController>().GetComponent<AgentMovement>();
         movement.OnStanceChange += ChangeStanceCamera;
     }
 

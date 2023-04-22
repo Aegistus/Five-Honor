@@ -154,7 +154,8 @@ public class AgentMovement : MonoBehaviour
     void MoveInDirection(Vector3 direction, float speed)
     {
         direction.Normalize();
-        transform.Translate(speed * Time.deltaTime * direction, Space.Self);
+        direction = agentModel.TransformVector(direction);
+        transform.Translate(speed * Time.deltaTime * direction, Space.World);
         CurrentMoveSpeed = speed;
     }
 
@@ -451,7 +452,7 @@ public class AgentMovement : MonoBehaviour
             currentAttackLength += Time.deltaTime;
             if (currentAttackLength >= movement.attackMovementStart && currentAttackLength < movement.attackMovementStop)
             {
-                movement.MoveInDirection(movement.agentModel.forward, movement.attackMovementSpeed);
+                movement.MoveInDirection(Vector3.forward, movement.attackMovementSpeed);
             }
         }
 
