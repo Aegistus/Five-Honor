@@ -607,7 +607,7 @@ MonoBehaviour:
   attackMovementSpeed: 3
   attackMovementStart: 0.2
   attackMovementStop: 0.6
-  guardChangeSensitivity: 1
+  guardChangeSensitivity: 0.5
 --- !u!114 &633915995
 MonoBehaviour:
   m_ObjectHideFlags: 0

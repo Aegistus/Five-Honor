@@ -190,11 +190,11 @@ public class PlayerMovement : MonoBehaviour
         GuardDirection newDirection = CurrentGuardDirection;
         Vector2 currentMousePosition = new Vector2(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"));
         Vector2 mousePosDelta = lastMousePosition - currentMousePosition;
-        if (mousePosDelta.x < -guardChangeSensitivity && mousePosDelta.y < 0)
+        if (mousePosDelta.x < -guardChangeSensitivity && mousePosDelta.y < guardChangeSensitivity)
         {
             newDirection = GuardDirection.Left;
         }
-        else if (mousePosDelta.x > guardChangeSensitivity && mousePosDelta.y < 0)
+        else if (mousePosDelta.x > guardChangeSensitivity && mousePosDelta.y < guardChangeSensitivity)
         {
             newDirection = GuardDirection.Right;
         }
