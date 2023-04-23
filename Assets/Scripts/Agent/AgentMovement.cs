@@ -49,6 +49,7 @@ public class AgentMovement : MonoBehaviour
     AgentController controller;
     AgentWeapons agentWeapons;
     AgentHealth agentHealth;
+    AgentIK agentIK;
 
     Vector3 movementVector;
     Quaternion targetRotation, currentRotation;
@@ -64,6 +65,7 @@ public class AgentMovement : MonoBehaviour
         controller = GetComponent<AgentController>();
         agentWeapons = GetComponent<AgentWeapons>();
         agentHealth = GetComponent<AgentHealth>();
+        agentIK = GetComponentInChildren<AgentIK>();
         agentHealth.OnDamageTaken += () => ChangeState(MovementType.Flinching);
         movementStates = new Dictionary<MovementType, MovementState>()
         {
@@ -159,6 +161,11 @@ public class AgentMovement : MonoBehaviour
         CurrentMoveSpeed = moveSpeed;
     }
 
+    /// <summary>
+    /// Takes direction relative to agent model.
+    /// </summary>
+    /// <param name="direction"></param>
+    /// <param name="speed"></param>
     void MoveInDirection(Vector3 direction, float speed)
     {
         direction.Normalize();
@@ -428,6 +435,7 @@ public class AgentMovement : MonoBehaviour
     class AttackingState : MovementState
     {
         float currentAttackLength = 0f;
+        bool attackCanceled = false;
 
         public AttackingState(AgentMovement movement) : base(movement)
         {
@@ -442,12 +450,23 @@ public class AgentMovement : MonoBehaviour
         public override void BeforeExecution()
         {
             print("Attacking");
+            attackCanceled = false;
             movement.agentWeapons.Attack(movement.attackLength, movement.CurrentGuardDirection);
+            movement.agentWeapons.RightWeapon.OnAttackBlocked += AttackCanceled;
             currentAttackLength = 0f;
+        }
+
+        private void AttackCanceled()
+        {
+            attackCanceled = true;
         }
 
         public override MovementType? CheckTransitions()
         {
+            if (attackCanceled)
+            {
+                return MovementType.Standing;
+            }
             if (currentAttackLength >= movement.attackLength)
             {
                 return MovementType.Standing;
@@ -483,7 +502,7 @@ public class AgentMovement : MonoBehaviour
 
         public override void AfterExecution()
         {
-
+            movement.agentIK.SetHandIK(Hand.LeftHand, true);
         }
 
         public override void BeforeExecution()
@@ -500,6 +519,7 @@ public class AgentMovement : MonoBehaviour
                 movement?.OnDodge.Invoke(jumpRight);
             }
             currentDodgeTime = 0;
+            movement.agentIK.SetHandIK(Hand.LeftHand, false);
         }
 
         public override MovementType? CheckTransitions()
@@ -516,11 +536,11 @@ public class AgentMovement : MonoBehaviour
             currentDodgeTime += Time.deltaTime;
             if (jumpRight)
             {
-                movement.MoveInDirection(movement.agentModel.right, movement.dodgeSpeed);
+                movement.MoveInDirection(Vector3.right, movement.dodgeSpeed);
             }
             else
             {
-                movement.MoveInDirection(-movement.agentModel.right, movement.dodgeSpeed);
+                movement.MoveInDirection(Vector3.left, movement.dodgeSpeed);
             }
             movement.CombatRotateAgentModel();
             movement.SetGuardDirection(movement.controller.GetGuardDirection());

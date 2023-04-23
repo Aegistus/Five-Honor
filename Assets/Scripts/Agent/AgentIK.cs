@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-enum Hand
+public enum Hand
 {
     None, LeftHand, RightHand
 }
@@ -98,6 +98,18 @@ public class AgentIK : MonoBehaviour
         {
             weapon.transform.localRotation = Quaternion.Euler(weapon.leftHandRotation);
             weapon.transform.localPosition = weapon.leftHandOffset;
+        }
+    }
+
+    public void SetHandIK(Hand hand, bool ik)
+    {
+        if (hand == Hand.LeftHand)
+        {
+            leftIK = ik;
+        }
+        else if (hand == Hand.RightHand)
+        {
+            rightIK = ik;
         }
     }
 }
