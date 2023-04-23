@@ -50,6 +50,7 @@ public class AgentMovement : MonoBehaviour
     [SerializeField] float attackMovementStop = .7f;
 
     AgentController controller;
+    AgentWeapons agentWeapons;
 
     Vector3 movementVector;
     Quaternion targetRotation, currentRotation;
@@ -63,6 +64,7 @@ public class AgentMovement : MonoBehaviour
     private void Awake()
     {
         controller = GetComponent<AgentController>();
+        agentWeapons = GetComponent<AgentWeapons>();
         movementStates = new Dictionary<MovementType, MovementState>()
         {
             { MovementType.Standing, new StandingState(this) },
@@ -434,6 +436,7 @@ public class AgentMovement : MonoBehaviour
         public override void BeforeExecution()
         {
             print("Attacking");
+            movement.agentWeapons.Attack(movement.attackLength, movement.CurrentGuardDirection);
             currentAttackLength = 0f;
         }
 

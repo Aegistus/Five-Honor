@@ -4,11 +4,18 @@ using UnityEngine;
 
 public class AgentWeapons : MonoBehaviour
 {
-    [SerializeField] Weapon leftWeapon;
     [SerializeField] Weapon rightWeapon;
 
-    public Weapon LeftWeapon => leftWeapon;
     public Weapon RightWeapon => rightWeapon;
 
+    private void Awake()
+    {
+        rightWeapon = GetComponentInChildren<Weapon>();
+    }
 
+    public void Attack(float duration, GuardDirection direction)
+    {
+        print("Attacking");
+        rightWeapon.EnterDamageState(duration, direction);
+    }
 }
