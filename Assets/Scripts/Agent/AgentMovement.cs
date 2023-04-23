@@ -232,12 +232,19 @@ public class AgentMovement : MonoBehaviour
 
         public override void AfterExecution()
         {
-
+            if (movement.CurrentStance == StanceType.Passive)
+            {
+                movement.agentIK.SetHandIK(Hand.LeftHand, true);
+            }
         }
 
         public override void BeforeExecution()
         {
             print("Standing");
+            if (movement.CurrentStance == StanceType.Passive)
+            {
+                movement.agentIK.SetHandIK(Hand.LeftHand, false);
+            }
         }
 
         public override MovementType? CheckTransitions()
