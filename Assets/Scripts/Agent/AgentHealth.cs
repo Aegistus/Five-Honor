@@ -1,9 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class AgentHealth : MonoBehaviour
 {
+    public event Action OnDamageTaken;
+
     float currentHealth = 100f;
 
     AgentMovement movement;
@@ -37,5 +40,6 @@ public class AgentHealth : MonoBehaviour
     public void Damage(float damage)
     {
         currentHealth -= damage;
+        OnDamageTaken?.Invoke();
     }
 }

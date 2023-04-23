@@ -8,14 +8,17 @@ public class AgentWeapons : MonoBehaviour
 
     public Weapon RightWeapon => rightWeapon;
 
+    AgentHealth agentHealth;
+
     private void Awake()
     {
         rightWeapon = GetComponentInChildren<Weapon>();
+        agentHealth = GetComponent<AgentHealth>();
     }
 
     public void Attack(float duration, GuardDirection direction)
     {
         print("Attacking");
-        rightWeapon.EnterDamageState(duration, direction);
+        rightWeapon.EnterDamageState(duration, direction, agentHealth);
     }
 }

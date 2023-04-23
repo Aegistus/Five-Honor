@@ -5,7 +5,7 @@ using System;
 
 public enum MovementType
 {
-    Standing, Running, Sprinting, Strafing, Attacking, Dodging
+    Standing, Running, Sprinting, Strafing, Attacking, Dodging, Flinching
 }
 public enum StanceType
 {
@@ -44,9 +44,11 @@ public class AgentMovement : MonoBehaviour
     [SerializeField] float attackMovementSpeed = 2f;
     [SerializeField] float attackMovementStart = .2f;
     [SerializeField] float attackMovementStop = .7f;
+    [SerializeField] float flinchDuration = 1f;
 
     AgentController controller;
     AgentWeapons agentWeapons;
+    AgentHealth agentHealth;
 
     Vector3 movementVector;
     Quaternion targetRotation, currentRotation;
@@ -61,6 +63,8 @@ public class AgentMovement : MonoBehaviour
     {
         controller = GetComponent<AgentController>();
         agentWeapons = GetComponent<AgentWeapons>();
+        agentHealth = GetComponent<AgentHealth>();
+        agentHealth.OnDamageTaken += () => ChangeState(MovementType.Flinching);
         movementStates = new Dictionary<MovementType, MovementState>()
         {
             { MovementType.Standing, new StandingState(this) },
@@ -69,6 +73,7 @@ public class AgentMovement : MonoBehaviour
             { MovementType.Sprinting, new SprintingState(this) },
             { MovementType.Attacking, new AttackingState(this) },
             { MovementType.Dodging, new DodgingState(this) },
+            { MovementType.Flinching, new FlinchingState(this) },
         };
         defaultMovementState = MovementType.Standing;
     }
@@ -105,11 +110,7 @@ public class AgentMovement : MonoBehaviour
         if (returnedState != null)
         {
             MovementType newState = (MovementType)returnedState;
-            currentState.AfterExecution();
-            currentState = movementStates[newState];
-            currentState.BeforeExecution();
-            CurrentStateType = newState;
-            OnMovementStateChange?.Invoke(CurrentStateType);
+            ChangeState(newState);
         }
         currentState.DuringExecution();
     }
@@ -117,6 +118,15 @@ public class AgentMovement : MonoBehaviour
     private void FixedUpdate()
     {
         currentState?.DuringPhysicsUpdate();
+    }
+
+    void ChangeState(MovementType newState)
+    {
+        currentState.AfterExecution();
+        currentState = movementStates[newState];
+        currentState.BeforeExecution();
+        CurrentStateType = newState;
+        OnMovementStateChange?.Invoke(CurrentStateType);
     }
 
     /// <summary>
@@ -514,6 +524,45 @@ public class AgentMovement : MonoBehaviour
             }
             movement.CombatRotateAgentModel();
             movement.SetGuardDirection(movement.controller.GetGuardDirection());
+        }
+
+        public override void DuringPhysicsUpdate()
+        {
+
+        }
+    }
+
+    class FlinchingState : MovementState
+    {
+        float currentTime;
+
+        public FlinchingState(AgentMovement movement) : base(movement)
+        {
+        }
+
+        public override void AfterExecution()
+        {
+
+        }
+
+        public override void BeforeExecution()
+        {
+            print("Flinching");
+            currentTime = 0f;
+        }
+
+        public override MovementType? CheckTransitions()
+        {
+            if (currentTime >= movement.flinchDuration)
+            {
+                return MovementType.Standing;
+            }
+            return null;
+        }
+
+        public override void DuringExecution()
+        {
+            currentTime += Time.deltaTime;
         }
 
         public override void DuringPhysicsUpdate()
