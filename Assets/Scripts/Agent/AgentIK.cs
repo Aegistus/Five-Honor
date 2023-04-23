@@ -34,6 +34,12 @@ public class AgentIK : MonoBehaviour
 
     private void WeaponChangeHands(StanceType newStance)
     {
+        if (leftWeapon)
+        {
+            leftWeapon.transform.SetParent(leftHand);
+            leftWeapon.transform.localRotation = Quaternion.Euler(leftWeapon.leftHandRotation);
+            leftWeapon.transform.localPosition = leftWeapon.leftHandOffset;
+        }
         if (rightWeapon)
         {
             if (newStance == StanceType.Combat && rightWeapon.leftIKTarget)
@@ -48,12 +54,7 @@ public class AgentIK : MonoBehaviour
             rightWeapon.transform.localRotation = Quaternion.Euler(rightWeapon.rightHandRotation);
             rightWeapon.transform.localPosition = rightWeapon.rightHandOffset;
         }
-        if (leftWeapon)
-        {
-            leftWeapon.transform.SetParent(leftHand);
-            leftWeapon.transform.localRotation = Quaternion.Euler(leftWeapon.leftHandRotation);
-            leftWeapon.transform.localPosition = leftWeapon.leftHandOffset;
-        }
+
     }
 
     private void Update()
