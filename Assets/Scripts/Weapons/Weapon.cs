@@ -11,11 +11,13 @@ public class Weapon : MonoBehaviour
 
     bool inDamageState = false;
     GuardDirection attackDirection = GuardDirection.None;
+    List<AgentHealth> alreadyHit = new List<AgentHealth>();
 
     public void EnterDamageState(float attackDuration, GuardDirection direction)
     {
         attackDirection = direction;
         inDamageState = true;
+        alreadyHit.Clear();
         StartCoroutine(AttackRoutine(attackDuration));
     }
 
@@ -30,13 +32,14 @@ public class Weapon : MonoBehaviour
         if (inDamageState)
         {
             AgentHealth health = GetComponentInParent<AgentHealth>();
-            if (health != null)
+            if (health != null && !alreadyHit.Contains(health))
             {
                 bool attackSucceeded = health.AttemptDamage(damage, attackDirection);
                 if (!attackSucceeded)
                 {
                     OnAttackBlocked?.Invoke();
                 }
+                alreadyHit.Add(health);
             }
         }
     }

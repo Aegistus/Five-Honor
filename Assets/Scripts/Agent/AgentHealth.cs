@@ -21,7 +21,7 @@ public class AgentHealth : MonoBehaviour
     /// <returns>True if the attack succeeded, false otherwise. </returns>
     public bool AttemptDamage(float damage, GuardDirection direction)
     {
-        if (movement.CurrentGuardDirection == direction)
+        if (movement.CurrentGuardDirection.Counters(direction))
         {
             print("Damage blocked");
             return false;

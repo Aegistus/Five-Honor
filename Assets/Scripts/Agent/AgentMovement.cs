@@ -12,10 +12,6 @@ public enum StanceType
     Passive, Combat
 }
 
-public enum GuardDirection
-{
-    None, Top, Left, Right
-}
 
 public class AgentMovement : MonoBehaviour
 {
