@@ -4147,7 +4147,7 @@ MonoBehaviour:
   agentModel: {fileID: 498876134}
   followTarget: {fileID: 1108592155}
   movementDirection: {fileID: 1631821206}
-  target: {fileID: 1326280059}
+  target: {fileID: 0}
   modelTurnSpeed: 5
   runSpeed: 5
   runAcceleration: 2
