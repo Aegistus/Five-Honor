@@ -446,6 +446,7 @@ public class AgentMovement : MonoBehaviour
     {
         float currentAttackLength = 0f;
         bool attackCanceled = false;
+        Vector3 movementDirection;
 
         public AttackingState(AgentMovement movement) : base(movement)
         {
@@ -464,6 +465,26 @@ public class AgentMovement : MonoBehaviour
             movement.agentWeapons.Attack(movement.attackLength, movement.CurrentGuardDirection);
             movement.agentWeapons.RightWeapon.OnAttackBlocked += AttackCanceled;
             currentAttackLength = 0f;
+            if (movement.controller.Forwards)
+            {
+                movementDirection = Vector3.forward;
+            }
+            else if (movement.controller.Backwards)
+            {
+                movementDirection = Vector3.back;
+            }
+            else if (movement.controller.Left)
+            {
+                movementDirection = Vector3.left;
+            }
+            else if (movement.controller.Right)
+            {
+                movementDirection = Vector3.right;
+            }
+            else
+            {
+                movementDirection = Vector3.zero;
+            }
         }
 
         private void AttackCanceled()
@@ -490,7 +511,7 @@ public class AgentMovement : MonoBehaviour
             currentAttackLength += Time.deltaTime;
             if (currentAttackLength >= movement.attackMovementStart && currentAttackLength < movement.attackMovementStop)
             {
-                movement.MoveInDirection(Vector3.forward, movement.attackMovementSpeed);
+                movement.MoveInDirection(movementDirection, movement.attackMovementSpeed);
             }
         }
 
