@@ -79,14 +79,14 @@ public class AgentIK : MonoBehaviour
 
     private void OnAnimatorIK(int layerIndex)
     {
-        if (rightWeapon != null && leftIK)
+        if (rightWeapon?.leftIKTarget != null && leftIK)
         {
             anim.SetIKPositionWeight(AvatarIKGoal.LeftHand, 1);
             anim.SetIKRotationWeight(AvatarIKGoal.LeftHand, 1);
             anim.SetIKPosition(AvatarIKGoal.LeftHand, rightWeapon.leftIKTarget.position);
             anim.SetIKRotation(AvatarIKGoal.LeftHand, rightWeapon.leftIKTarget.rotation);
         }
-        else if (leftWeapon != null && rightIK)
+        else if (leftWeapon?.rightIKTarget != null && rightIK)
         {
             anim.SetIKPositionWeight(AvatarIKGoal.RightHand, 1);
             anim.SetIKRotationWeight(AvatarIKGoal.RightHand, 1);

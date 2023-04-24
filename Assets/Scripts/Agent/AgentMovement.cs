@@ -5,7 +5,7 @@ using System;
 
 public enum MovementType
 {
-    Standing, Running, Sprinting, Strafing, Attacking, Dodging, Flinching
+    Standing, Running, Sprinting, Strafing, Attacking, Dodging, Flinching, Blocking
 }
 public enum StanceType
 {
@@ -45,6 +45,7 @@ public class AgentMovement : MonoBehaviour
     [SerializeField] float attackMovementStart = .2f;
     [SerializeField] float attackMovementStop = .7f;
     [SerializeField] float flinchDuration = 1f;
+    [SerializeField] float blockDuration = 1f;
 
     AgentController controller;
     AgentWeapons agentWeapons;
@@ -67,6 +68,7 @@ public class AgentMovement : MonoBehaviour
         agentHealth = GetComponent<AgentHealth>();
         agentIK = GetComponentInChildren<AgentIK>();
         agentHealth.OnDamageTaken += () => ChangeState(MovementType.Flinching);
+        agentHealth.OnDamageBlocked += () => ChangeState(MovementType.Blocking);
         movementStates = new Dictionary<MovementType, MovementState>()
         {
             { MovementType.Standing, new StandingState(this) },
@@ -76,6 +78,7 @@ public class AgentMovement : MonoBehaviour
             { MovementType.Attacking, new AttackingState(this) },
             { MovementType.Dodging, new DodgingState(this) },
             { MovementType.Flinching, new FlinchingState(this) },
+            { MovementType.Blocking, new BlockingState(this) },
         };
         defaultMovementState = MovementType.Standing;
     }
@@ -598,5 +601,43 @@ public class AgentMovement : MonoBehaviour
         }
     }
 
+    class BlockingState : MovementState
+    {
+        float currentTime = 0f;
+
+        public BlockingState(AgentMovement movement) : base(movement)
+        {
+        }
+
+        public override void AfterExecution()
+        {
+
+        }
+
+        public override void BeforeExecution()
+        {
+            currentTime = 0f;
+        }
+
+        public override MovementType? CheckTransitions()
+        {
+            if (currentTime >= movement.blockDuration)
+            {
+                return MovementType.Standing;
+            }
+
+            return null;
+        }
+
+        public override void DuringExecution()
+        {
+            currentTime += Time.deltaTime;
+        }
+
+        public override void DuringPhysicsUpdate()
+        {
+
+        }
+    }
     #endregion
 }

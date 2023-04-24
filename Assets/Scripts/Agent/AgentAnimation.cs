@@ -28,7 +28,8 @@ public class AgentAnimation : MonoBehaviour
         { MovementType.Sprinting, Animator.StringToHash("Sprinting") },
         { MovementType.Attacking, Animator.StringToHash("Attacking") },
         { MovementType.Dodging, Animator.StringToHash("Dodging") },
-        { MovementType.Flinching, Animator.StringToHash("Flinching") }
+        { MovementType.Flinching, Animator.StringToHash("Flinching") },
+        { MovementType.Blocking, Animator.StringToHash("Blocking") },
     };
 
     int xMovementHash = Animator.StringToHash("XMovement");
