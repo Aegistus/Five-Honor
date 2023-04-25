@@ -31,6 +31,8 @@ public class AgentMovement : MonoBehaviour
     [SerializeField] Transform movementDirection;
     [SerializeField] Transform target;
     [Header("Movement")]
+    [SerializeField] LayerMask groundLayer;
+    [SerializeField] float groundOffset;
     [SerializeField] float modelTurnSpeed = 60f;
     [SerializeField] float runSpeed = 5f;
     [SerializeField] float runAcceleration = .5f;
@@ -118,6 +120,8 @@ public class AgentMovement : MonoBehaviour
             ChangeState(newState);
         }
         currentState.DuringExecution();
+
+        StickAgentToGround();
     }
 
     private void FixedUpdate()
@@ -210,6 +214,16 @@ public class AgentMovement : MonoBehaviour
         }
         CurrentGuardDirection = direction;
         OnGuardDirectionChange?.Invoke(CurrentGuardDirection);
+    }
+
+    void StickAgentToGround()
+    {
+        RaycastHit rayHit;
+        if (Physics.Raycast(agentModel.position + Vector3.up, Vector3.down, out rayHit, 5f, groundLayer))
+        {
+            Vector3 adjustedPosition = new Vector3(transform.position.x, rayHit.point.y + groundOffset, transform.position.z);
+            transform.position = adjustedPosition;
+        }
     }
 
     #region Movement States
