@@ -4,13 +4,15 @@ using UnityEngine;
 
 public class CameraController : MonoBehaviour
 {
-    [SerializeField] GameObject passiveCam;
-    [SerializeField] GameObject combatCam;
-    [SerializeField] Transform playerFollowTarget;
-    [SerializeField] Transform enemyTarget;
+    [SerializeField] Transform cameraHolder;
+    [SerializeField] Transform passiveLookTarget;
+    [SerializeField] Transform combatLookTarget;
+    [SerializeField] Vector3 passiveOffset;
+    [SerializeField] Vector3 combatOffset;
     [SerializeField] float mouseSensitivity = 1000f;
 
     AgentMovement movement;
+    Vector3 targetCameraOffset;
 
     private void Awake()
     {
@@ -22,13 +24,11 @@ public class CameraController : MonoBehaviour
     {
         if (stance == StanceType.Passive)
         {
-            passiveCam.SetActive(true);
-            combatCam.SetActive(false);
+            targetCameraOffset = passiveOffset;
         }
         else if (stance == StanceType.Combat)
         {
-            passiveCam.SetActive(false);
-            combatCam.SetActive(true);
+            targetCameraOffset = combatOffset;
         }
     }
 
@@ -49,13 +49,13 @@ public class CameraController : MonoBehaviour
     {
         float mouseX = Input.GetAxis("Mouse X");
         float mouseY = Input.GetAxis("Mouse Y");
-        playerFollowTarget.Rotate(-mouseY * mouseSensitivity * Time.deltaTime, mouseX * mouseSensitivity * Time.deltaTime, 0);
-        playerFollowTarget.eulerAngles = new Vector3(playerFollowTarget.eulerAngles.x, playerFollowTarget.eulerAngles.y, 0);
+        cameraHolder.Rotate(-mouseY * mouseSensitivity * Time.deltaTime, mouseX * mouseSensitivity * Time.deltaTime, 0);
+        cameraHolder.eulerAngles = new Vector3(cameraHolder.eulerAngles.x, cameraHolder.eulerAngles.y, 0);
     }
 
     void CombatCameraRotation()
     {
-        playerFollowTarget.LookAt(enemyTarget.position);
+        cameraHolder.LookAt(combatLookTarget.position);
     }
 
 }
