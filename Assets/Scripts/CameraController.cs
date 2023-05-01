@@ -10,6 +10,7 @@ public class CameraController : MonoBehaviour
     [SerializeField] Vector3 passiveOffset;
     [SerializeField] Vector3 combatOffset;
     [SerializeField] float mouseSensitivity = 1000f;
+    [SerializeField] float stanceChangeSpeed = 5f;
 
     AgentMovement movement;
     Vector3 targetCameraOffset;
@@ -18,6 +19,7 @@ public class CameraController : MonoBehaviour
     {
         movement = FindObjectOfType<PlayerController>().GetComponent<AgentMovement>();
         movement.OnStanceChange += ChangeStanceCamera;
+        ChangeStanceCamera(StanceType.Passive);
     }
 
     private void ChangeStanceCamera(StanceType stance)
@@ -42,6 +44,8 @@ public class CameraController : MonoBehaviour
         {
             PassiveCameraRotation();
         }
+        // move cam to current offset
+        transform.localPosition = Vector3.Lerp(transform.localPosition, targetCameraOffset, stanceChangeSpeed * Time.deltaTime);
     }
 
 
