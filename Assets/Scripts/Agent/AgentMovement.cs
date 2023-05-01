@@ -312,7 +312,7 @@ public class AgentMovement : MonoBehaviour
 
         public override void AfterExecution()
         {
-
+            movement.movementVector = Vector3.zero;
         }
 
         public override void BeforeExecution()
@@ -366,7 +366,7 @@ public class AgentMovement : MonoBehaviour
 
         public override void AfterExecution()
         {
-
+            movement.movementVector = Vector3.zero;
         }
 
         public override void BeforeExecution()
@@ -400,6 +400,7 @@ public class AgentMovement : MonoBehaviour
     class StrafingState : MovementState
     {
         float currentStrafeSpeed = 0f;
+        KeyCode currentKeyDirection;
         
         public StrafingState(AgentMovement movement) : base(movement)
         {
@@ -407,7 +408,7 @@ public class AgentMovement : MonoBehaviour
 
         public override void AfterExecution()
         {
-
+            movement.movementVector = Vector3.zero;
         }
 
         public override void BeforeExecution()
