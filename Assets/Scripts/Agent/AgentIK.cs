@@ -13,9 +13,14 @@ public class AgentIK : MonoBehaviour
     [SerializeField] WeaponIK rightWeapon;
     [SerializeField] Transform rightHand;
     [SerializeField] Transform leftHand;
+    [SerializeField] float iKTransitionSpeed = 5f;
 
     bool leftIK;
     bool rightIK;
+    float leftIKTargetWeight = 0f;
+    float rightIKTargetWeight = 0f;
+    float leftIKCurrentWeight = 0f;
+    float rightIKCurrentWeight = 0f;
     Animator anim;
 
     private void Awake()
@@ -36,7 +41,7 @@ public class AgentIK : MonoBehaviour
             rightWeapon.transform.SetParent(rightHand);
             rightWeapon.transform.localRotation = Quaternion.Euler(rightWeapon.rightHandRotation);
             rightWeapon.transform.localPosition = rightWeapon.rightHandOffset;
-            leftIK = true;
+            SetHandIK(Hand.LeftHand, true);
         }
         else
         {
@@ -81,17 +86,25 @@ public class AgentIK : MonoBehaviour
     {
         if (rightWeapon?.leftIKTarget != null && leftIK)
         {
-            anim.SetIKPositionWeight(AvatarIKGoal.LeftHand, 1);
-            anim.SetIKRotationWeight(AvatarIKGoal.LeftHand, 1);
+            anim.SetIKPositionWeight(AvatarIKGoal.LeftHand, leftIKCurrentWeight);
+            anim.SetIKRotationWeight(AvatarIKGoal.LeftHand, leftIKCurrentWeight);
             anim.SetIKPosition(AvatarIKGoal.LeftHand, rightWeapon.leftIKTarget.position);
             anim.SetIKRotation(AvatarIKGoal.LeftHand, rightWeapon.leftIKTarget.rotation);
         }
         else if (leftWeapon?.rightIKTarget != null && rightIK)
         {
-            anim.SetIKPositionWeight(AvatarIKGoal.RightHand, 1);
-            anim.SetIKRotationWeight(AvatarIKGoal.RightHand, 1);
+            anim.SetIKPositionWeight(AvatarIKGoal.RightHand, rightIKCurrentWeight);
+            anim.SetIKRotationWeight(AvatarIKGoal.RightHand, rightIKCurrentWeight);
             anim.SetIKPosition(AvatarIKGoal.RightHand, leftWeapon.rightIKTarget.position);
             anim.SetIKRotation(AvatarIKGoal.RightHand, leftWeapon.rightIKTarget.rotation);
+        }
+        if (leftIKCurrentWeight != leftIKTargetWeight)
+        {
+            leftIKCurrentWeight = Mathf.Lerp(leftIKCurrentWeight, leftIKTargetWeight, iKTransitionSpeed * Time.deltaTime);
+        }
+        if (rightIKCurrentWeight != rightIKTargetWeight)
+        {
+            rightIKCurrentWeight = Mathf.Lerp(rightIKCurrentWeight, rightIKTargetWeight, iKTransitionSpeed * Time.deltaTime);
         }
     }
 
@@ -100,10 +113,12 @@ public class AgentIK : MonoBehaviour
         if (hand == Hand.LeftHand)
         {
             leftIK = ik;
+            leftIKTargetWeight = ik ? 1f : 0f;
         }
         else if (hand == Hand.RightHand)
         {
             rightIK = ik;
+            rightIKTargetWeight = ik ? 1f : 0f;
         }
     }
 }
