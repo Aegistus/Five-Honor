@@ -13,6 +13,14 @@ public class Weapon : MonoBehaviour
     GuardDirection attackDirection = GuardDirection.None;
     List<AgentHealth> alreadyHit = new List<AgentHealth>();
     AgentHealth damageSource;
+    int hitSoundID;
+    int swingSoundID;
+
+    private void Start()
+    {
+        hitSoundID = SoundManager.Instance.GetSoundID("Sword_Hit");
+        swingSoundID = SoundManager.Instance.GetSoundID("Sword_Swing");
+    }
 
     public void EnterDamageState(float attackDuration, GuardDirection direction, AgentHealth damageSource)
     {
@@ -20,6 +28,7 @@ public class Weapon : MonoBehaviour
         attackDirection = direction;
         inDamageState = true;
         alreadyHit.Clear();
+        SoundManager.Instance.PlaySoundAtPosition(swingSoundID, transform.position);
         StartCoroutine(AttackRoutine(attackDuration));
     }
 
@@ -42,6 +51,7 @@ public class Weapon : MonoBehaviour
                     OnAttackBlocked?.Invoke();
                     inDamageState = false;
                 }
+                SoundManager.Instance.PlaySoundAtPosition(hitSoundID, transform.position);
                 alreadyHit.Add(health);
             }
         }

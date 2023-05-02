@@ -303,6 +303,7 @@ GameObject:
   - component: {fileID: 4064687584476893087}
   - component: {fileID: 4064687584476893086}
   - component: {fileID: 4064687584476893073}
+  - component: {fileID: 8737287970364415309}
   - component: {fileID: 4064687584476893084}
   - component: {fileID: 4064687584476893085}
   m_Layer: 0
@@ -388,6 +389,18 @@ MonoBehaviour:
   rightHand: {fileID: 4064687586175500137}
   leftHand: {fileID: 4064687584485760947}
   iKTransitionSpeed: 5
+--- !u!114 &8737287970364415309
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4064687584476893075}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 61638c006301b6146be77c15872be966, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!136 &4064687584476893084
 CapsuleCollider:
   m_ObjectHideFlags: 0

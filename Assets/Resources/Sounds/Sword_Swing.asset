@@ -1,0 +1,43 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f8af0e3fab035dc419adb6218dd391f1, type: 3}
+  m_Name: Sword_Swing
+  m_EditorClassIdentifier: 
+  audioVariants:
+  - {fileID: 8300000, guid: 25536fd26b9538e4d9643de89219ad81, type: 3}
+  - {fileID: 8300000, guid: 1d90ec460c0fec148a6affd7bf8fba55, type: 3}
+  - {fileID: 8300000, guid: 030638bcee78b2140a15e63846c8febf, type: 3}
+  - {fileID: 8300000, guid: 39040f47a921e5943afb50a5ab084f7a, type: 3}
+  - {fileID: 8300000, guid: b9f2ee1f715ffc74f8fdcad27adae30a, type: 3}
+  - {fileID: 8300000, guid: f3cde1b8c0d7c3643a57c4253a75ca02, type: 3}
+  - {fileID: 8300000, guid: 9b8186c01024bbb4285b36b9da575641, type: 3}
+  - {fileID: 8300000, guid: a1914f1a68a54d6438bfb335a735e0a6, type: 3}
+  - {fileID: 8300000, guid: 6876f71733e66b94ca3fd0b89b9cd011, type: 3}
+  - {fileID: 8300000, guid: c58c34ffd7a902648baae247cf63a1ab, type: 3}
+  - {fileID: 8300000, guid: f3a11bb171b3a7648ab9932bd4f50621, type: 3}
+  - {fileID: 8300000, guid: 21888f20ea094be48879f9782fce63cb, type: 3}
+  - {fileID: 8300000, guid: 55de64dd6844ef843a543874689a99b4, type: 3}
+  - {fileID: 8300000, guid: 9e55316809cd28547bdd0a4602361faa, type: 3}
+  - {fileID: 8300000, guid: 59112a4b729027e4ba534e3961401af6, type: 3}
+  - {fileID: 8300000, guid: 207982767094811448cf7966d6a3a7fc, type: 3}
+  - {fileID: 8300000, guid: bbcf9806db9ed914b8fc0f273ab3e9b5, type: 3}
+  - {fileID: 8300000, guid: 4ef5790fd7f9afc469d4ba50d40581e8, type: 3}
+  - {fileID: 8300000, guid: 3b9a5723f49eb37418c6ee2aebf26be1, type: 3}
+  - {fileID: 8300000, guid: d1c6b79d12ecab14e85d8377fa1e42f7, type: 3}
+  volume: 1
+  volumeVariance: 0.1
+  pitch: 1
+  pitchVariance: 0.1
+  minimunDistance: 1
+  loop: 0
+  mixerGroup: {fileID: 0}
+  source: {fileID: 0}

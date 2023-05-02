@@ -11,10 +11,12 @@ public class AgentHealth : MonoBehaviour
     float currentHealth = 100f;
 
     AgentMovement movement;
+    int hitSoundID;
 
     private void Start()
     {
         movement = GetComponent<AgentMovement>();
+        hitSoundID = SoundManager.Instance.GetSoundID("Agent_Hit");
     }
 
     /// <summary>
@@ -43,6 +45,7 @@ public class AgentHealth : MonoBehaviour
     public void Damage(float damage)
     {
         currentHealth -= damage;
+        SoundManager.Instance.PlaySoundAtPosition(hitSoundID, transform.position);
         OnDamageTaken?.Invoke();
     }
 }

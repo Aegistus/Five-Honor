@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f8af0e3fab035dc419adb6218dd391f1, type: 3}
+  m_Name: Footstep
+  m_EditorClassIdentifier: 
+  audioVariants:
+  - {fileID: 8300000, guid: 3ae84a7820fdd614d8d62d0685360dee, type: 3}
+  - {fileID: 8300000, guid: 17677b14a995db94e872fdfd9d6ad7b4, type: 3}
+  - {fileID: 8300000, guid: 3e2675b976ec3434896c8af6c6768de2, type: 3}
+  - {fileID: 8300000, guid: d0c5c3eead91f7344941748d64adcc70, type: 3}
+  - {fileID: 8300000, guid: d62702e67d03eb84a9980120005b0c80, type: 3}
+  - {fileID: 8300000, guid: 920c354982418d142beeddf4dc4564e3, type: 3}
+  - {fileID: 8300000, guid: f9fe674e450b4af4bb77086efdfb40a8, type: 3}
+  - {fileID: 8300000, guid: cdd068066e11ae94d8dac5731fa22846, type: 3}
+  - {fileID: 8300000, guid: eb3db8e668440f74b95485ba1cef902f, type: 3}
+  - {fileID: 8300000, guid: e1bdd8916534e9341a039b048b4e7552, type: 3}
+  volume: 1
+  volumeVariance: 0.1
+  pitch: 1
+  pitchVariance: 0.1
+  minimunDistance: 1
+  loop: 0
+  mixerGroup: {fileID: 0}
+  source: {fileID: 0}

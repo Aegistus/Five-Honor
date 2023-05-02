@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f8af0e3fab035dc419adb6218dd391f1, type: 3}
+  m_Name: Sword_Hit
+  m_EditorClassIdentifier: 
+  audioVariants:
+  - {fileID: 8300000, guid: aaeb18ebc5b8e9341a993eaa92b3b1c6, type: 3}
+  - {fileID: 8300000, guid: 822368af35328a948b00775946ffa492, type: 3}
+  - {fileID: 8300000, guid: 92c6416c904adfe44b1778ce08ab25b0, type: 3}
+  - {fileID: 8300000, guid: 825633ebae341934bb8004a4bbfb808a, type: 3}
+  - {fileID: 8300000, guid: 2546a8736ee3f5e479f0b57d21f474e7, type: 3}
+  - {fileID: 8300000, guid: 0fe05156d7de81d419de81dde1932cca, type: 3}
+  - {fileID: 8300000, guid: f6eed78d98cf0f94fb19b5509363cc0c, type: 3}
+  - {fileID: 8300000, guid: 33ffcc1175224974c98a84da626d132c, type: 3}
+  - {fileID: 8300000, guid: 8ecbdbbfe88cb74478d6b837c50da77b, type: 3}
+  - {fileID: 8300000, guid: c7940fe349720ff4e8ec54971ed98407, type: 3}
+  volume: 1
+  volumeVariance: 0.1
+  pitch: 1
+  pitchVariance: 0.1
+  minimunDistance: 1
+  loop: 0
+  mixerGroup: {fileID: 0}
+  source: {fileID: 0}
