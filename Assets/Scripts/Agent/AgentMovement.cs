@@ -486,6 +486,7 @@ public class AgentMovement : MonoBehaviour
             attackCanceled = false;
             attackReleased = false;
             movement.agentWeapons.RightWeapon.OnAttackBlocked += AttackCanceled;
+            movement.agentHealth.OnDamageTaken += AttackCanceled;
             currentDuration = 0f;
             if (movement.controller.Forwards)
             {
