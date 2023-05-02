@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class PlayerController : AgentController
 {
-    [SerializeField] float guardChangeSensitivity = .5f;
+    [SerializeField] float guardChangeTolerance = 1f;
 
-    Vector2 lastMousePosition;
+    GuardDirection lastGuardDirection;
 
     private void Start()
     {
@@ -28,22 +28,20 @@ public class PlayerController : AgentController
 
     public override GuardDirection GetGuardDirection()
     {
-        GuardDirection newDirection = GuardDirection.None;
-        Vector2 currentMousePosition = new Vector2(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"));
-        Vector2 mousePosDelta = lastMousePosition - currentMousePosition;
-        if (mousePosDelta.x < -guardChangeSensitivity && mousePosDelta.y < guardChangeSensitivity)
+        GuardDirection newDirection = lastGuardDirection;
+        Vector2 currentMouseMovement = new Vector2(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"));
+        if (currentMouseMovement.x < -guardChangeTolerance && currentMouseMovement.y < guardChangeTolerance)
         {
             newDirection = GuardDirection.Left;
         }
-        else if (mousePosDelta.x > guardChangeSensitivity && mousePosDelta.y < guardChangeSensitivity)
+        else if (currentMouseMovement.x > guardChangeTolerance && currentMouseMovement.y < guardChangeTolerance)
         {
             newDirection = GuardDirection.Right;
         }
-        else if (mousePosDelta.y > guardChangeSensitivity)
+        else if (currentMouseMovement.y > guardChangeTolerance)
         {
             newDirection = GuardDirection.Top;
         }
-        lastMousePosition = currentMousePosition;
         return newDirection;
     }
 }
