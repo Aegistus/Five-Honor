@@ -131,6 +131,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   damage: 10
+  animationSet: {fileID: 22100000, guid: 6f32cd76117ee9c479fc27cb0b9076b1, type: 2}
 --- !u!65 &1484985693486923614
 BoxCollider:
   m_ObjectHideFlags: 0

@@ -30,6 +30,7 @@ public class AgentIK : MonoBehaviour
 
     private void Start()
     {
+        rightWeapon = GetComponentInParent<AgentWeapons>().RightWeapon.GetComponent<WeaponIK>();
         SetupWeapons();
     }
 

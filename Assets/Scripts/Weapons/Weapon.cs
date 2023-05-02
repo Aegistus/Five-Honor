@@ -6,8 +6,10 @@ using System;
 public class Weapon : MonoBehaviour
 {
     public event Action OnAttackBlocked;
+    public AnimatorOverrideController AnimationSet => animationSet;
 
     [SerializeField] float damage = 10f;
+    [SerializeField] AnimatorOverrideController animationSet;
 
     bool inDamageState = false;
     GuardDirection attackDirection = GuardDirection.None;

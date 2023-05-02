@@ -55,6 +55,11 @@ public class AgentAnimation : MonoBehaviour
         ChangeStanceAnimations(StanceType.Passive);
     }
 
+    private void Start()
+    {
+        anim.runtimeAnimatorController = GetComponent<AgentWeapons>().RightWeapon.AnimationSet;
+    }
+
     private void Update()
     {
         anim.SetFloat(xMovementHash, movement.CurrentMoveVector.x);
