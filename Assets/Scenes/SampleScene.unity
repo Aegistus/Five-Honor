@@ -657,26 +657,6 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 1870683943, guid: 0dfccae2aacbebe4092d95642a9284c5, type: 3}
-      propertyPath: combatOffset.x
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1870683943, guid: 0dfccae2aacbebe4092d95642a9284c5, type: 3}
-      propertyPath: combatOffset.y
-      value: 0.2
-      objectReference: {fileID: 0}
-    - target: {fileID: 1870683943, guid: 0dfccae2aacbebe4092d95642a9284c5, type: 3}
-      propertyPath: combatOffset.z
-      value: -3
-      objectReference: {fileID: 0}
-    - target: {fileID: 1870683943, guid: 0dfccae2aacbebe4092d95642a9284c5, type: 3}
-      propertyPath: passiveOffset.y
-      value: 0.75
-      objectReference: {fileID: 0}
-    - target: {fileID: 1870683943, guid: 0dfccae2aacbebe4092d95642a9284c5, type: 3}
-      propertyPath: passiveOffset.z
-      value: -3
-      objectReference: {fileID: 0}
-    - target: {fileID: 1870683943, guid: 0dfccae2aacbebe4092d95642a9284c5, type: 3}
       propertyPath: combatLookTarget
       value: 
       objectReference: {fileID: 808056526}
@@ -885,14 +865,6 @@ PrefabInstance:
     - target: {fileID: 4064687585603650542, guid: 730e2a49d763b9b4d81db69a18edc96d, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4064687586299045068, guid: 730e2a49d763b9b4d81db69a18edc96d, type: 3}
-      propertyPath: m_Data.m_SourceObjects.m_Item0.transform
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 4064687586299045068, guid: 730e2a49d763b9b4d81db69a18edc96d, type: 3}
-      propertyPath: m_Data.m_SourceObjects.m_Item1.transform
-      value: 
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 730e2a49d763b9b4d81db69a18edc96d, type: 3}

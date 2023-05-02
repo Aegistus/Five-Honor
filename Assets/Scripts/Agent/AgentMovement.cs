@@ -43,6 +43,7 @@ public class AgentMovement : MonoBehaviour
     [SerializeField] float dodgeTime = .5f;
     [Header("Combat")]
     [SerializeField] float attackLength = 2f;
+    [SerializeField] float windupDuration = 1f;
     [SerializeField] float attackMovementSpeed = 2f;
     [SerializeField] float attackMovementStart = .2f;
     [SerializeField] float attackMovementStop = .7f;
@@ -459,8 +460,9 @@ public class AgentMovement : MonoBehaviour
 
     class AttackingState : MovementState
     {
-        float currentAttackLength = 0f;
+        float currentDuration = 0f;
         bool attackCanceled = false;
+        bool attackReleased = false;
         Vector3 movementDirection;
 
         public AttackingState(AgentMovement movement) : base(movement)
@@ -477,9 +479,9 @@ public class AgentMovement : MonoBehaviour
         {
             print("Attacking");
             attackCanceled = false;
-            movement.agentWeapons.Attack(movement.attackLength, movement.CurrentGuardDirection);
+            attackReleased = false;
             movement.agentWeapons.RightWeapon.OnAttackBlocked += AttackCanceled;
-            currentAttackLength = 0f;
+            currentDuration = 0f;
             if (movement.controller.Forwards)
             {
                 movementDirection = Vector3.forward;
@@ -513,7 +515,7 @@ public class AgentMovement : MonoBehaviour
             {
                 return MovementType.Standing;
             }
-            if (currentAttackLength >= movement.attackLength)
+            if (currentDuration >= movement.attackLength)
             {
                 return MovementType.Standing;
             }
@@ -523,10 +525,15 @@ public class AgentMovement : MonoBehaviour
         public override void DuringExecution()
         {
             movement.SetGuardDirection(movement.controller.GetGuardDirection());
-            currentAttackLength += Time.deltaTime;
-            if (currentAttackLength >= movement.attackMovementStart && currentAttackLength < movement.attackMovementStop)
+            currentDuration += Time.deltaTime;
+            if (currentDuration >= movement.attackMovementStart && currentDuration < movement.attackMovementStop)
             {
                 movement.MoveInDirection(movementDirection, movement.attackMovementSpeed);
+            }
+            if (currentDuration >= movement.windupDuration && !attackReleased)
+            {
+                movement.agentWeapons.Attack(movement.attackLength, movement.CurrentGuardDirection);
+                attackReleased = true;
             }
         }
 

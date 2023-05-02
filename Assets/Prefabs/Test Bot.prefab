@@ -387,6 +387,7 @@ MonoBehaviour:
   rightWeapon: {fileID: 31369213259732155}
   rightHand: {fileID: 4064687586175500137}
   leftHand: {fileID: 4064687584485760947}
+  iKTransitionSpeed: 5
 --- !u!136 &4064687584476893084
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -1701,7 +1702,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4064687585603650533}
-  m_LocalRotation: {x: -0, y: 0.99852926, z: -0, w: -0.054216802}
+  m_LocalRotation: {x: 0, y: 0.99852914, z: -0, w: -0.05421812}
   m_LocalPosition: {x: 4.84, y: 0.855208, z: 11.4}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -1742,6 +1743,10 @@ MonoBehaviour:
   followTarget: {fileID: 4064687585690154861}
   movementDirection: {fileID: 4064687586282581216}
   target: {fileID: 0}
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  groundOffset: 0
   modelTurnSpeed: 5
   runSpeed: 5
   runAcceleration: 2
@@ -1751,6 +1756,7 @@ MonoBehaviour:
   dodgeSpeed: 5
   dodgeTime: 0.5
   attackLength: 1
+  windupDuration: 0.25
   attackMovementSpeed: 3
   attackMovementStart: 0.2
   attackMovementStop: 0.6

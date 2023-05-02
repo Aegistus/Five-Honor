@@ -40,6 +40,7 @@ public class Weapon : MonoBehaviour
                 if (!attackSucceeded)
                 {
                     OnAttackBlocked?.Invoke();
+                    inDamageState = false;
                 }
                 alreadyHit.Add(health);
             }
