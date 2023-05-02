@@ -5,7 +5,7 @@ using System;
 
 public enum MovementType
 {
-    Standing, Running, Sprinting, Strafing, Attacking, Dodging, Flinching, Blocking
+    Standing, Running, Sprinting, Strafing, Attacking, Dodging, Flinching, Blocking, SprintAttack
 }
 public enum StanceType
 {
@@ -37,7 +37,6 @@ public class AgentMovement : MonoBehaviour
     [SerializeField] float runSpeed = 5f;
     [SerializeField] float runAcceleration = .5f;
     [SerializeField] float strafeSpeed = 4f;
-    [SerializeField] float strafeAcceleration = .5f;
     [SerializeField] float sprintSpeed = 10f;
     [SerializeField] float dodgeSpeed = 5f;
     [SerializeField] float dodgeTime = .5f;
@@ -49,6 +48,7 @@ public class AgentMovement : MonoBehaviour
     [SerializeField] float attackMovementStop = .7f;
     [SerializeField] float flinchDuration = 1f;
     [SerializeField] float blockDuration = 1f;
+    [SerializeField] float sprintAttackMovementSpeed = 4f;
 
     AgentController controller;
     AgentWeapons agentWeapons;
@@ -82,6 +82,7 @@ public class AgentMovement : MonoBehaviour
             { MovementType.Dodging, new DodgingState(this) },
             { MovementType.Flinching, new FlinchingState(this) },
             { MovementType.Blocking, new BlockingState(this) },
+            { MovementType.SprintAttack, new SprintAttackingState(this) },
         };
         defaultMovementState = MovementType.Standing;
     }
@@ -382,6 +383,10 @@ public class AgentMovement : MonoBehaviour
             {
                 return MovementType.Standing;
             }
+            if (movement.controller.LightAttack)
+            {
+                return MovementType.SprintAttack;
+            }
             return null;
         }
 
@@ -675,6 +680,90 @@ public class AgentMovement : MonoBehaviour
         public override void DuringExecution()
         {
             currentTime += Time.deltaTime;
+        }
+
+        public override void DuringPhysicsUpdate()
+        {
+
+        }
+    }
+
+    class SprintAttackingState : MovementState
+    {
+        float currentDuration = 0f;
+        bool attackCanceled = false;
+        bool attackReleased = false;
+        Vector3 movementDirection;
+
+        public SprintAttackingState(AgentMovement movement) : base(movement)
+        {
+        }
+
+        public override void AfterExecution()
+        {
+
+        }
+
+        public override void BeforeExecution()
+        {
+            print("Attacking");
+            attackCanceled = false;
+            attackReleased = false;
+            movement.agentWeapons.RightWeapon.OnAttackBlocked += AttackCanceled;
+            currentDuration = 0f;
+            if (movement.controller.Forwards)
+            {
+                movementDirection = Vector3.forward;
+            }
+            else if (movement.controller.Backwards)
+            {
+                movementDirection = Vector3.back;
+            }
+            else if (movement.controller.Left)
+            {
+                movementDirection = Vector3.left;
+            }
+            else if (movement.controller.Right)
+            {
+                movementDirection = Vector3.right;
+            }
+            else
+            {
+                movementDirection = Vector3.zero;
+            }
+        }
+
+        private void AttackCanceled()
+        {
+            attackCanceled = true;
+        }
+
+        public override MovementType? CheckTransitions()
+        {
+            if (attackCanceled)
+            {
+                return MovementType.Standing;
+            }
+            if (currentDuration >= movement.attackLength)
+            {
+                return MovementType.Standing;
+            }
+            return null;
+        }
+
+        public override void DuringExecution()
+        {
+            movement.SetGuardDirection(movement.controller.GetGuardDirection());
+            currentDuration += Time.deltaTime;
+            if (currentDuration >= movement.attackMovementStart && currentDuration < movement.attackMovementStop)
+            {
+                movement.MoveInDirection(movementDirection, movement.sprintAttackMovementSpeed);
+            }
+            if (currentDuration >= movement.windupDuration && !attackReleased)
+            {
+                movement.agentWeapons.Attack(movement.attackLength, movement.CurrentGuardDirection);
+                attackReleased = true;
+            }
         }
 
         public override void DuringPhysicsUpdate()

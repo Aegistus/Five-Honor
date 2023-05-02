@@ -30,6 +30,7 @@ public class AgentAnimation : MonoBehaviour
         { MovementType.Dodging, Animator.StringToHash("Dodging") },
         { MovementType.Flinching, Animator.StringToHash("Flinching") },
         { MovementType.Blocking, Animator.StringToHash("Blocking") },
+        { MovementType.SprintAttack, Animator.StringToHash("Sprint Attacking") },
     };
 
     Dictionary<MovementType, int> movementToVariantNumber = new Dictionary<MovementType, int>()
