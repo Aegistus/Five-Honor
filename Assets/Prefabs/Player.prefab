@@ -278,7 +278,7 @@ MonoBehaviour:
   strafeSpeed: 3
   strafeAcceleration: 0.5
   sprintSpeed: 10
-  dodgeSpeed: 5
+  dodgeSpeed: 7
   dodgeTime: 0.5
   attackLength: 1
   windupDuration: 0.25
