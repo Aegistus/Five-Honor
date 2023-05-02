@@ -593,6 +593,7 @@ public class AgentMovement : MonoBehaviour
         public override void DuringExecution()
         {
             currentDodgeTime += Time.deltaTime;
+            movement.CombatRotateAgentModel();
             if (jumpRight)
             {
                 movement.MoveInDirection(Vector3.right, movement.dodgeSpeed);
@@ -601,7 +602,6 @@ public class AgentMovement : MonoBehaviour
             {
                 movement.MoveInDirection(Vector3.left, movement.dodgeSpeed);
             }
-            movement.CombatRotateAgentModel();
             movement.SetGuardDirection(movement.controller.GetGuardDirection());
         }
 

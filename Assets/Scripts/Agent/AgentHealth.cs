@@ -8,6 +8,10 @@ public class AgentHealth : MonoBehaviour
     public event Action OnDamageTaken;
     public event Action OnDamageBlocked;
 
+    public float CurrentHealth => currentHealth;
+    public float MaxHealth => maxHealth;
+
+    float maxHealth = 100f;
     float currentHealth = 100f;
 
     AgentMovement movement;
