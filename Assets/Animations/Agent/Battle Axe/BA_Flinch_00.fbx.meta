@@ -731,7 +731,7 @@ ModelImporter:
     second: B-upper_arm.R
   - first:
       74: 7400000
-    second: BA_Flinch
+    second: BA_Flinch_00
   - first:
       95: 9500000
     second: //RootNode
@@ -768,7 +768,7 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: BA_Flinch
+      name: BA_Flinch_00
       takeName: 2HLong@TakeDamage05
       internalID: 0
       firstFrame: 0

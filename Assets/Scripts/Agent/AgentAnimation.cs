@@ -32,6 +32,12 @@ public class AgentAnimation : MonoBehaviour
         { MovementType.Blocking, Animator.StringToHash("Blocking") },
     };
 
+    Dictionary<MovementType, int> movementToVariantNumber = new Dictionary<MovementType, int>()
+    {
+        { MovementType.Flinching, 3 },
+    };
+
+    int randomHash = Animator.StringToHash("Random");
     int xMovementHash = Animator.StringToHash("XMovement");
     int zMovementHash = Animator.StringToHash("ZMovement");
     int guardDirectionHash = Animator.StringToHash("GuardDirection");
@@ -57,6 +63,10 @@ public class AgentAnimation : MonoBehaviour
     void UpdateMovementAnimation(MovementType newMovement)
     {
         print("Changing animation");
+        if (movementToVariantNumber.ContainsKey(newMovement))
+        {
+            anim.SetInteger(randomHash, UnityEngine.Random.Range(0, movementToVariantNumber[newMovement]));
+        }
         anim.CrossFade(movementTypeToAnimation[newMovement], transitionTime, currentStanceLayer);
     }
 

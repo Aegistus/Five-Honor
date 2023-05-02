@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 245ac24f062c0a045a5b0326d0cea308
+guid: 5cb7ee730fd07254990d78c93f6f6023
 ModelImporter:
   serializedVersion: 21300
   internalIDToNameTable:
@@ -389,7 +389,7 @@ ModelImporter:
     second: root
   - first:
       74: 7400000
-    second: OHS_Flinch
+    second: OHS_Flinch_01
   - first:
       95: 9500000
     second: //RootNode
@@ -423,11 +423,11 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: OHS_Flinch
-      takeName: 1H@TakeDamage02
+      name: OHS_Flinch_01
+      takeName: 1H@TakeDamage05
       internalID: 0
       firstFrame: 0
-      lastFrame: 26
+      lastFrame: 39
       wrapMode: 0
       orientationOffsetY: 0
       level: 0

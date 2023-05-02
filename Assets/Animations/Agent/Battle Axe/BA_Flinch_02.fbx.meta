@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 8d37d8c1b51bd094fa21c5a9a7a76edc
+guid: f3ad6e635ba2e85408cf4ab8b36e44df
 ModelImporter:
   serializedVersion: 21300
   internalIDToNameTable:
@@ -731,7 +731,7 @@ ModelImporter:
     second: B-upper_arm.R
   - first:
       74: 7400000
-    second: GS_Flinch
+    second: BA_Flinch_02
   - first:
       95: 9500000
     second: //RootNode
@@ -768,11 +768,11 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: GS_Flinch
-      takeName: 2H@TakeDamage05
+      name: BA_Flinch_02
+      takeName: 2HLong@TakeDamage02
       internalID: 0
       firstFrame: 0
-      lastFrame: 39
+      lastFrame: 30
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
