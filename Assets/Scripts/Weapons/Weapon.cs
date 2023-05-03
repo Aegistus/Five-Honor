@@ -45,7 +45,7 @@ public class Weapon : MonoBehaviour
         if (inDamageState)
         {
             AgentHealth health = other.GetComponentInParent<AgentHealth>();
-            if (health != null && !alreadyHit.Contains(health) && health != damageSource)
+            if (health != null && !alreadyHit.Contains(health) && health != damageSource && !health.IsDead)
             {
                 bool attackSucceeded = health.AttemptDamage(damage, attackDirection);
                 if (!attackSucceeded)

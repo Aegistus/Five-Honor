@@ -5,13 +5,12 @@ using System;
 
 public enum MovementType
 {
-    Standing, Running, Sprinting, Strafing, Attacking, Dodging, Flinching, Blocking, SprintAttack
+    Standing, Running, Sprinting, Strafing, Attacking, Dodging, Flinching, Blocking, SprintAttack, Dying
 }
 public enum StanceType
 {
     Passive, Combat
 }
-
 
 public class AgentMovement : MonoBehaviour
 {
@@ -72,6 +71,7 @@ public class AgentMovement : MonoBehaviour
         agentIK = GetComponentInChildren<AgentIK>();
         agentHealth.OnDamageTaken += () => ChangeState(MovementType.Flinching);
         agentHealth.OnDamageBlocked += () => ChangeState(MovementType.Blocking);
+        agentHealth.OnAgentDeath += () => ChangeState(MovementType.Dying);
         movementStates = new Dictionary<MovementType, MovementState>()
         {
             { MovementType.Standing, new StandingState(this) },
@@ -83,6 +83,7 @@ public class AgentMovement : MonoBehaviour
             { MovementType.Flinching, new FlinchingState(this) },
             { MovementType.Blocking, new BlockingState(this) },
             { MovementType.SprintAttack, new SprintAttackingState(this) },
+            { MovementType.Dying, new DyingState(this) },
         };
         defaultMovementState = MovementType.Standing;
     }
@@ -133,6 +134,10 @@ public class AgentMovement : MonoBehaviour
 
     void ChangeState(MovementType newState)
     {
+        if (currentState.GetType() == typeof(DyingState))
+        {
+            return;
+        }
         currentState.AfterExecution();
         currentState = movementStates[newState];
         currentState.BeforeExecution();
@@ -477,7 +482,8 @@ public class AgentMovement : MonoBehaviour
 
         public override void AfterExecution()
         {
-
+            movement.agentWeapons.RightWeapon.OnAttackBlocked -= AttackCanceled;
+            movement.agentHealth.OnDamageTaken -= AttackCanceled;
         }
 
         public override void BeforeExecution()
@@ -702,7 +708,7 @@ public class AgentMovement : MonoBehaviour
 
         public override void AfterExecution()
         {
-
+            movement.agentWeapons.RightWeapon.OnAttackBlocked -= AttackCanceled;
         }
 
         public override void BeforeExecution()
@@ -765,6 +771,38 @@ public class AgentMovement : MonoBehaviour
                 movement.agentWeapons.Attack(movement.attackLength, movement.CurrentGuardDirection);
                 attackReleased = true;
             }
+        }
+
+        public override void DuringPhysicsUpdate()
+        {
+
+        }
+    }
+
+    class DyingState : MovementState
+    {
+        public DyingState(AgentMovement movement) : base(movement)
+        {
+        }
+
+        public override void AfterExecution()
+        {
+
+        }
+
+        public override void BeforeExecution()
+        {
+
+        }
+
+        public override MovementType? CheckTransitions()
+        {
+            return null;
+        }
+
+        public override void DuringExecution()
+        {
+
         }
 
         public override void DuringPhysicsUpdate()

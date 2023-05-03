@@ -31,11 +31,13 @@ public class AgentAnimation : MonoBehaviour
         { MovementType.Flinching, Animator.StringToHash("Flinching") },
         { MovementType.Blocking, Animator.StringToHash("Blocking") },
         { MovementType.SprintAttack, Animator.StringToHash("Sprint Attacking") },
+        { MovementType.Dying, Animator.StringToHash("Dying") },
     };
 
     Dictionary<MovementType, int> movementToVariantNumber = new Dictionary<MovementType, int>()
     {
         { MovementType.Flinching, 3 },
+        { MovementType.Dying, 4 },
     };
 
     int randomHash = Animator.StringToHash("Random");
@@ -69,6 +71,7 @@ public class AgentAnimation : MonoBehaviour
     void UpdateMovementAnimation(MovementType newMovement)
     {
         print("Changing animation");
+        // choose random variant if applicable for this movement type.
         if (movementToVariantNumber.ContainsKey(newMovement))
         {
             anim.SetInteger(randomHash, UnityEngine.Random.Range(0, movementToVariantNumber[newMovement]));

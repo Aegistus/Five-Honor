@@ -7,9 +7,14 @@ public class AgentHealth : MonoBehaviour
 {
     public event Action OnDamageTaken;
     public event Action OnDamageBlocked;
+    public event Action OnAgentDeath;
 
     public float CurrentHealth => currentHealth;
     public float MaxHealth => maxHealth;
+    public bool IsDead => isDead;
+
+
+    bool isDead = false;
 
     float maxHealth = 100f;
     float currentHealth = 100f;
@@ -24,7 +29,7 @@ public class AgentHealth : MonoBehaviour
     }
 
     /// <summary>
-    /// Attempt to do damage to agent. If the attack direction != the agent's guard direction, the attack will succeed.
+    /// Attempt to do damage to agent. If the attack direction is not countered by the agent's guard direction, the attack will succeed.
     /// </summary>
     /// <param name="damage"></param>
     /// <param name="direction"></param>
@@ -48,8 +53,25 @@ public class AgentHealth : MonoBehaviour
 
     public void Damage(float damage)
     {
+        if (isDead)
+        {
+            return;
+        }
         currentHealth -= damage;
         SoundManager.Instance.PlaySoundAtPosition(hitSoundID, transform.position);
+        if (currentHealth <= 0)
+        {
+            currentHealth = 0;
+            Die();
+            return;
+        }
         OnDamageTaken?.Invoke();
+    }
+
+    void Die()
+    {
+        isDead = true;
+        OnDamageTaken?.Invoke();
+        OnAgentDeath?.Invoke();
     }
 }

@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: c19d615e86f34a94cbcf32caf5f6a52c
+guid: 8b81196567434294ea70144676d94c7c
 ModelImporter:
   serializedVersion: 21300
   internalIDToNameTable: []
@@ -33,7 +33,7 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: mixamo.com
+      name: Dying_03
       takeName: mixamo.com
       internalID: -203655887218126122
       firstFrame: 0
