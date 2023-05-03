@@ -32,6 +32,7 @@ public class AgentMovement : MonoBehaviour
     [Header("Movement")]
     [SerializeField] LayerMask groundLayer;
     [SerializeField] float groundOffset;
+    [SerializeField] float obstacleCheckDistance = 1f;
     [SerializeField] float modelTurnSpeed = 60f;
     [SerializeField] float runSpeed = 5f;
     [SerializeField] float runAcceleration = .5f;
@@ -171,8 +172,11 @@ public class AgentMovement : MonoBehaviour
             movementVector += movementDirection.right;
         }
         movementVector.Normalize();
-        transform.Translate(moveSpeed * Time.deltaTime * movementVector, Space.World);
-        CurrentMoveSpeed = moveSpeed;
+        if (!IsBlocked(movementVector))
+        {
+            transform.Translate(moveSpeed * Time.deltaTime * movementVector, Space.World);
+            CurrentMoveSpeed = moveSpeed;
+        }
     }
 
     /// <summary>
@@ -184,8 +188,24 @@ public class AgentMovement : MonoBehaviour
     {
         direction.Normalize();
         direction = agentModel.TransformVector(direction);
-        transform.Translate(speed * Time.deltaTime * direction, Space.World);
-        CurrentMoveSpeed = speed;
+        if (!IsBlocked(direction))
+        {
+            transform.Translate(speed * Time.deltaTime * direction, Space.World);
+            CurrentMoveSpeed = speed;
+        }
+    }
+
+    bool IsBlocked(Vector3 direction)
+    {
+        bool blocked = false;
+        for (float checkHeight = .5f; checkHeight < 2; checkHeight += .5f)
+        {
+            if (Physics.Raycast(agentModel.position + Vector3.up * checkHeight, direction, obstacleCheckDistance, groundLayer))
+            {
+                blocked = true;
+            }
+        }
+        return blocked;
     }
 
     void CombatRotateAgentModel()
