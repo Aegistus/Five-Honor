@@ -5,19 +5,19 @@ using UnityEngine;
 public class CameraController : MonoBehaviour
 {
     [SerializeField] Transform cameraHolder;
-    [SerializeField] Transform passiveLookTarget;
-    [SerializeField] Transform combatLookTarget;
     [SerializeField] Vector3 passiveOffset;
     [SerializeField] Vector3 combatOffset;
     [SerializeField] float mouseSensitivity = 1000f;
     [SerializeField] float stanceChangeSpeed = 5f;
 
     AgentMovement movement;
+    PlayerController controller;
     Vector3 targetCameraOffset;
 
     private void Awake()
     {
-        movement = FindObjectOfType<PlayerController>().GetComponent<AgentMovement>();
+        controller = FindObjectOfType<PlayerController>();
+        movement = controller.GetComponent<AgentMovement>();
         movement.OnStanceChange += ChangeStanceCamera;
         ChangeStanceCamera(StanceType.Passive);
     }
@@ -59,7 +59,10 @@ public class CameraController : MonoBehaviour
 
     void CombatCameraRotation()
     {
-        cameraHolder.LookAt(combatLookTarget.position);
+        if (controller.Target != null)
+        {
+            cameraHolder.LookAt(controller.Target.position);
+        }
     }
 
 }

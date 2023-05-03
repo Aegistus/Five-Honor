@@ -70,7 +70,6 @@ public class AgentAnimation : MonoBehaviour
 
     void UpdateMovementAnimation(MovementType newMovement)
     {
-        print("Changing animation");
         // choose random variant if applicable for this movement type.
         if (movementToVariantNumber.ContainsKey(newMovement))
         {

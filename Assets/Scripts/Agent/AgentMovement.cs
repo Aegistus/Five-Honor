@@ -28,7 +28,6 @@ public class AgentMovement : MonoBehaviour
     [SerializeField] Transform agentModel;
     [SerializeField] Transform followTarget;
     [SerializeField] Transform movementDirection;
-    [SerializeField] Transform target;
     [Header("Movement")]
     [SerializeField] LayerMask groundLayer;
     [SerializeField] float groundOffset;
@@ -63,6 +62,8 @@ public class AgentMovement : MonoBehaviour
 
     MovementState currentState;
     StanceType currentStance;
+
+    Transform Target => controller.Target;
 
     private void Awake()
     {
@@ -211,7 +212,7 @@ public class AgentMovement : MonoBehaviour
     void CombatRotateAgentModel()
     {
         currentRotation = agentModel.rotation;
-        agentModel.LookAt(target);
+        agentModel.LookAt(Target);
         targetRotation.eulerAngles = new Vector3(0, agentModel.eulerAngles.y, 0);
         agentModel.rotation = currentRotation;
         agentModel.rotation = Quaternion.Lerp(currentRotation, targetRotation, modelTurnSpeed * Time.deltaTime);
@@ -230,6 +231,10 @@ public class AgentMovement : MonoBehaviour
     void ChangeStance(StanceType newStance)
     {
         currentStance = newStance;
+        if (newStance == StanceType.Combat)
+        {
+            controller.FindNewTarget();
+        }
         OnStanceChange?.Invoke(newStance);
     }
 
@@ -284,7 +289,6 @@ public class AgentMovement : MonoBehaviour
 
         public override void BeforeExecution()
         {
-            print("Standing");
             if (movement.CurrentStance == StanceType.Passive)
             {
                 movement.agentIK.SetHandIK(Hand.LeftHand, false);
@@ -508,7 +512,6 @@ public class AgentMovement : MonoBehaviour
 
         public override void BeforeExecution()
         {
-            print("Attacking");
             attackCanceled = false;
             attackReleased = false;
             movement.agentWeapons.RightWeapon.OnAttackBlocked += AttackCanceled;

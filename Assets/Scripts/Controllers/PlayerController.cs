@@ -5,6 +5,8 @@ using UnityEngine;
 public class PlayerController : AgentController
 {
     [SerializeField] float guardChangeTolerance = 1f;
+    [SerializeField] LayerMask agentLayer;
+    [SerializeField] float targetCheckRadius = 10f;
 
     GuardDirection lastGuardDirection;
 
@@ -43,5 +45,30 @@ public class PlayerController : AgentController
             newDirection = GuardDirection.Top;
         }
         return newDirection;
+    }
+
+    Collider[] sphereHits = new Collider[10];
+    public override void FindNewTarget()
+    {
+        Physics.OverlapSphereNonAlloc(transform.position, targetCheckRadius, sphereHits, agentLayer);
+        Target = null;
+        float closestDistance = float.PositiveInfinity;
+        for (int i = 0; i < sphereHits.Length; i++)
+        {
+            if (sphereHits[i] != null)
+            {
+                print("Checking Target");
+                float distance = Vector3.Distance(transform.position, sphereHits[i].transform.position);
+                if (distance < closestDistance)
+                {
+                    AgentController agentController = sphereHits[i].GetComponentInParent<AgentController>();
+                    if (agentController != null && agentController != this)
+                    {
+                        Target = agentController.transform;
+                        closestDistance = distance;
+                    }
+                }
+            }
+        }
     }
 }

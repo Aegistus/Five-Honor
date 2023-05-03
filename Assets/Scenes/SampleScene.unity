@@ -1678,10 +1678,6 @@ PrefabInstance:
       propertyPath: combatLookTarget
       value: 
       objectReference: {fileID: 808056526}
-    - target: {fileID: 1382539502645960043, guid: 0dfccae2aacbebe4092d95642a9284c5, type: 3}
-      propertyPath: damage
-      value: 60
-      objectReference: {fileID: 0}
     - target: {fileID: 1744600517852719964, guid: 0dfccae2aacbebe4092d95642a9284c5, type: 3}
       propertyPath: m_RootOrder
       value: 2
@@ -1729,14 +1725,6 @@ PrefabInstance:
     - target: {fileID: 1744600517852719965, guid: 0dfccae2aacbebe4092d95642a9284c5, type: 3}
       propertyPath: m_Name
       value: Player
-      objectReference: {fileID: 0}
-    - target: {fileID: 1744600517852719967, guid: 0dfccae2aacbebe4092d95642a9284c5, type: 3}
-      propertyPath: target
-      value: 
-      objectReference: {fileID: 808056526}
-    - target: {fileID: 1744600517852719967, guid: 0dfccae2aacbebe4092d95642a9284c5, type: 3}
-      propertyPath: obstacleCheckDistance
-      value: 0.5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0dfccae2aacbebe4092d95642a9284c5, type: 3}

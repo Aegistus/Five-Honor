@@ -18,7 +18,6 @@ public class AgentWeapons : MonoBehaviour
 
     public void Attack(float duration, GuardDirection direction)
     {
-        print("Attacking");
         rightWeapon.EnterDamageState(duration, direction, agentHealth);
     }
 }

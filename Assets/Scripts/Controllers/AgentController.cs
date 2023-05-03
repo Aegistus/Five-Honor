@@ -14,6 +14,9 @@ public abstract class AgentController : MonoBehaviour
     public bool StanceChange { get; protected set; }
     public bool NoMovementInput => !Forwards && !Backwards && !Left && !Right;
     public bool MovementInput => Forwards || Backwards || Left || Right;
+    public Transform Target { get; protected set; }
 
     public abstract GuardDirection GetGuardDirection();
+
+    public abstract void FindNewTarget();
 }

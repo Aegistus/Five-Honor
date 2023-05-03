@@ -52,4 +52,9 @@ public class AttackAgentController : AgentController
     {
         return currentDirection;
     }
+
+    public override void FindNewTarget()
+    {
+        
+    }
 }
