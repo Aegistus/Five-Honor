@@ -495,6 +495,7 @@ public class AgentMovement : MonoBehaviour
         bool attackCanceled = false;
         bool attackFinished = false;
         bool attackReleased = false;
+        bool attackFollowThru = false;
         Vector3 movementDirection;
 
         public AttackingState(AgentMovement movement) : base(movement)
@@ -516,6 +517,7 @@ public class AgentMovement : MonoBehaviour
             attackCanceled = false;
             attackReleased = false;
             attackFinished = false;
+            attackFollowThru = false;
             movement.agentWeapons.RightWeapon.OnAttackBlocked += AttackCanceled;
             movement.agentHealth.OnDamageTaken += AttackCanceled;
             movement.animationEvents.OnAttackRelease += AttackReleased;
@@ -557,6 +559,7 @@ public class AgentMovement : MonoBehaviour
         void AttackFollowThru()
         {
             movement.agentWeapons.EndAttack();
+            attackFollowThru = true;
         }
 
         void AttackFinish()
@@ -573,6 +576,14 @@ public class AgentMovement : MonoBehaviour
             if (attackFinished)
             {
                 return MovementType.Standing;
+            }
+            if (movement.controller.LightAttack && attackFollowThru)
+            {
+                return MovementType.Attacking;
+            }
+            if (movement.controller.Dodge && attackFollowThru)
+            {
+                return MovementType.Dodging;
             }
             return null;
         }
