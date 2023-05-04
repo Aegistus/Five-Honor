@@ -40,11 +40,7 @@ public class AgentMovement : MonoBehaviour
     [SerializeField] float dodgeSpeed = 5f;
     [SerializeField] float dodgeTime = .5f;
     [Header("Combat")]
-    [SerializeField] float attackLength = 2f;
-    [SerializeField] float windupDuration = 1f;
     [SerializeField] float attackMovementSpeed = 2f;
-    [SerializeField] float attackMovementStart = .2f;
-    [SerializeField] float attackMovementStop = .7f;
     [SerializeField] float flinchDuration = 1f;
     [SerializeField] float blockDuration = 1f;
     [SerializeField] float sprintAttackMovementSpeed = 4f;
@@ -53,6 +49,7 @@ public class AgentMovement : MonoBehaviour
     AgentWeapons agentWeapons;
     AgentHealth agentHealth;
     AgentIK agentIK;
+    AgentAnimationEvents animationEvents;
 
     Vector3 movementVector;
     Quaternion targetRotation, currentRotation;
@@ -71,6 +68,7 @@ public class AgentMovement : MonoBehaviour
         agentWeapons = GetComponent<AgentWeapons>();
         agentHealth = GetComponent<AgentHealth>();
         agentIK = GetComponentInChildren<AgentIK>();
+        animationEvents = GetComponentInChildren<AgentAnimationEvents>();
         agentHealth.OnDamageTaken += () => ChangeState(MovementType.Flinching);
         agentHealth.OnDamageBlocked += () => ChangeState(MovementType.Blocking);
         agentHealth.OnAgentDeath += () => ChangeState(MovementType.Dying);
@@ -494,8 +492,8 @@ public class AgentMovement : MonoBehaviour
 
     class AttackingState : MovementState
     {
-        float currentDuration = 0f;
         bool attackCanceled = false;
+        bool attackFinished = false;
         bool attackReleased = false;
         Vector3 movementDirection;
 
@@ -508,15 +506,21 @@ public class AgentMovement : MonoBehaviour
         {
             movement.agentWeapons.RightWeapon.OnAttackBlocked -= AttackCanceled;
             movement.agentHealth.OnDamageTaken -= AttackCanceled;
+            movement.animationEvents.OnAttackRelease -= AttackReleased;
+            movement.animationEvents.OnAttackFollowThru -= AttackFollowThru;
+            movement.animationEvents.OnAttackFinished -= AttackFinish;
         }
 
         public override void BeforeExecution()
         {
             attackCanceled = false;
             attackReleased = false;
+            attackFinished = false;
             movement.agentWeapons.RightWeapon.OnAttackBlocked += AttackCanceled;
             movement.agentHealth.OnDamageTaken += AttackCanceled;
-            currentDuration = 0f;
+            movement.animationEvents.OnAttackRelease += AttackReleased;
+            movement.animationEvents.OnAttackFollowThru += AttackFollowThru;
+            movement.animationEvents.OnAttackFinished += AttackFinish;
             if (movement.controller.Forwards)
             {
                 movementDirection = Vector3.forward;
@@ -544,13 +548,29 @@ public class AgentMovement : MonoBehaviour
             attackCanceled = true;
         }
 
+        void AttackReleased()
+        {
+            movement.agentWeapons.Attack(movement.CurrentGuardDirection);
+            attackReleased = true;
+        }
+
+        void AttackFollowThru()
+        {
+            movement.agentWeapons.EndAttack();
+        }
+
+        void AttackFinish()
+        {
+            attackFinished = true;
+        }
+
         public override MovementType? CheckTransitions()
         {
             if (attackCanceled)
             {
                 return MovementType.Standing;
             }
-            if (currentDuration >= movement.attackLength)
+            if (attackFinished)
             {
                 return MovementType.Standing;
             }
@@ -560,15 +580,9 @@ public class AgentMovement : MonoBehaviour
         public override void DuringExecution()
         {
             movement.SetGuardDirection(movement.controller.GetGuardDirection());
-            currentDuration += Time.deltaTime;
-            if (currentDuration >= movement.attackMovementStart && currentDuration < movement.attackMovementStop)
+            if (!attackReleased)
             {
                 movement.MoveInDirection(movementDirection, movement.attackMovementSpeed);
-            }
-            if (currentDuration >= movement.windupDuration && !attackReleased)
-            {
-                movement.agentWeapons.Attack(movement.attackLength, movement.CurrentGuardDirection);
-                attackReleased = true;
             }
         }
 
@@ -718,87 +732,10 @@ public class AgentMovement : MonoBehaviour
         }
     }
 
-    class SprintAttackingState : MovementState
+    class SprintAttackingState : AttackingState
     {
-        float currentDuration = 0f;
-        bool attackCanceled = false;
-        bool attackReleased = false;
-        Vector3 movementDirection;
-
         public SprintAttackingState(AgentMovement movement) : base(movement)
         {
-        }
-
-        public override void AfterExecution()
-        {
-            movement.agentWeapons.RightWeapon.OnAttackBlocked -= AttackCanceled;
-        }
-
-        public override void BeforeExecution()
-        {
-            print("Attacking");
-            attackCanceled = false;
-            attackReleased = false;
-            movement.agentWeapons.RightWeapon.OnAttackBlocked += AttackCanceled;
-            currentDuration = 0f;
-            if (movement.controller.Forwards)
-            {
-                movementDirection = Vector3.forward;
-            }
-            else if (movement.controller.Backwards)
-            {
-                movementDirection = Vector3.back;
-            }
-            else if (movement.controller.Left)
-            {
-                movementDirection = Vector3.left;
-            }
-            else if (movement.controller.Right)
-            {
-                movementDirection = Vector3.right;
-            }
-            else
-            {
-                movementDirection = Vector3.zero;
-            }
-        }
-
-        private void AttackCanceled()
-        {
-            attackCanceled = true;
-        }
-
-        public override MovementType? CheckTransitions()
-        {
-            if (attackCanceled)
-            {
-                return MovementType.Standing;
-            }
-            if (currentDuration >= movement.attackLength)
-            {
-                return MovementType.Standing;
-            }
-            return null;
-        }
-
-        public override void DuringExecution()
-        {
-            movement.SetGuardDirection(movement.controller.GetGuardDirection());
-            currentDuration += Time.deltaTime;
-            if (currentDuration >= movement.attackMovementStart && currentDuration < movement.attackMovementStop)
-            {
-                movement.MoveInDirection(movementDirection, movement.sprintAttackMovementSpeed);
-            }
-            if (currentDuration >= movement.windupDuration && !attackReleased)
-            {
-                movement.agentWeapons.Attack(movement.attackLength, movement.CurrentGuardDirection);
-                attackReleased = true;
-            }
-        }
-
-        public override void DuringPhysicsUpdate()
-        {
-
         }
     }
 

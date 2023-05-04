@@ -303,6 +303,7 @@ GameObject:
   - component: {fileID: 4064687584476893087}
   - component: {fileID: 4064687584476893086}
   - component: {fileID: 4064687584476893073}
+  - component: {fileID: 1004947922515498340}
   - component: {fileID: 8737287970364415309}
   - component: {fileID: 4064687584476893084}
   - component: {fileID: 4064687584476893085}
@@ -389,6 +390,18 @@ MonoBehaviour:
   rightHand: {fileID: 4064687586175500137}
   leftHand: {fileID: 4064687584485760947}
   iKTransitionSpeed: 5
+--- !u!114 &1004947922515498340
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4064687584476893075}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 05accb3b53ed84041aa3dced26ef79f4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &8737287970364415309
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1768,11 +1781,7 @@ MonoBehaviour:
   sprintSpeed: 10
   dodgeSpeed: 5
   dodgeTime: 0.5
-  attackLength: 1
-  windupDuration: 0.25
   attackMovementSpeed: 3
-  attackMovementStart: 0.2
-  attackMovementStop: 0.6
   flinchDuration: 1
   blockDuration: 1
   sprintAttackMovementSpeed: 4

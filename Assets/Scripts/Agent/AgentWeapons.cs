@@ -16,8 +16,13 @@ public class AgentWeapons : MonoBehaviour
         agentHealth = GetComponent<AgentHealth>();
     }
 
-    public void Attack(float duration, GuardDirection direction)
+    public void Attack(GuardDirection direction)
     {
-        rightWeapon.EnterDamageState(duration, direction, agentHealth);
+        rightWeapon.EnterDamageState(direction, agentHealth);
+    }
+
+    public void EndAttack()
+    {
+        RightWeapon.ExitDamageState();
     }
 }

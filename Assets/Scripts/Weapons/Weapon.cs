@@ -24,19 +24,17 @@ public class Weapon : MonoBehaviour
         swingSoundID = SoundManager.Instance.GetSoundID("Sword_Swing");
     }
 
-    public void EnterDamageState(float attackDuration, GuardDirection direction, AgentHealth damageSource)
+    public void EnterDamageState(GuardDirection direction, AgentHealth damageSource)
     {
         this.damageSource = damageSource;
         attackDirection = direction;
         inDamageState = true;
         alreadyHit.Clear();
         SoundManager.Instance.PlaySoundAtPosition(swingSoundID, transform.position);
-        StartCoroutine(AttackRoutine(attackDuration));
     }
 
-    IEnumerator AttackRoutine(float attackDuration)
+    public void ExitDamageState()
     {
-        yield return new WaitForSeconds(attackDuration);
         inDamageState = false;
     }
 
