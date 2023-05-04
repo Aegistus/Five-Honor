@@ -1714,6 +1714,7 @@ GameObject:
   - component: {fileID: 4064687585603650541}
   - component: {fileID: 4064687585603650540}
   - component: {fileID: 4064687585603650531}
+  - component: {fileID: 4031748641641658266}
   m_Layer: 7
   m_Name: Test Bot
   m_TagString: Untagged
@@ -1824,6 +1825,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   transitionTime: 0.05
   stanceTransitionSpeed: 4
+--- !u!114 &4031748641641658266
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4064687585603650533}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: def37d49038f3c54c8780ff9c0035f75, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxStamina: 100
+  staminaRegainRate: 50
 --- !u!1 &4064687585641658021
 GameObject:
   m_ObjectHideFlags: 0

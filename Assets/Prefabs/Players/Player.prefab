@@ -130,8 +130,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cameraHolder: {fileID: 1421203160}
-  passiveLookTarget: {fileID: 0}
-  combatLookTarget: {fileID: 0}
   passiveOffset: {x: 0, y: 0.75, z: -3}
   combatOffset: {x: 1, y: 0.2, z: -3}
   mouseSensitivity: 1000
@@ -212,6 +210,7 @@ GameObject:
   - component: {fileID: 1744600517852719962}
   - component: {fileID: 1744600517852719963}
   - component: {fileID: 1744600517852719966}
+  - component: {fileID: 1826577625621056547}
   m_Layer: 7
   m_Name: Player
   m_TagString: Untagged
@@ -284,11 +283,7 @@ MonoBehaviour:
   sprintSpeed: 10
   dodgeSpeed: 7
   dodgeTime: 0.5
-  attackLength: 1
-  windupDuration: 0.25
   attackMovementSpeed: 3
-  attackMovementStart: 0.2
-  attackMovementStop: 0.6
   flinchDuration: 1
   blockDuration: 1
   sprintAttackMovementSpeed: 4
@@ -331,6 +326,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   transitionTime: 0.05
   stanceTransitionSpeed: 4
+--- !u!114 &1826577625621056547
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1744600517852719965}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: def37d49038f3c54c8780ff9c0035f75, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxStamina: 100
+  staminaRegainRate: 50
 --- !u!1001 &1744600516603659728
 PrefabInstance:
   m_ObjectHideFlags: 0
