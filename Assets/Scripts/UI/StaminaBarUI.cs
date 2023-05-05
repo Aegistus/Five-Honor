@@ -8,18 +8,19 @@ public class StaminaBarUI : MonoBehaviour
     [SerializeField] Transform staminaBar;
 
     AgentStamina playerStamina;
+    Transform mainCam;
 
     private void Start()
     {
         playerStamina = FindObjectOfType<PlayerController>().GetComponent<AgentStamina>();
-        playerStamina.OnStaminaChange += UpdateHealthBar;
-        UpdateHealthBar();
+        mainCam = Camera.main.transform;
     }
 
-    private void UpdateHealthBar()
+    private void Update()
     {
-        float percentHealth = playerStamina.CurrentStamina / playerStamina.MaxStamina;
-        staminaBar.localScale = new Vector2(percentHealth, 1);
+        float percentStamina = playerStamina.CurrentStamina / playerStamina.MaxStamina;
+        staminaBar.localScale = new Vector2(percentStamina, 1);
+        transform.LookAt(mainCam);
     }
 
 }

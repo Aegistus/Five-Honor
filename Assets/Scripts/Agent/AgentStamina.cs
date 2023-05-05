@@ -13,6 +13,11 @@ public class AgentStamina : MonoBehaviour
     public float CurrentStamina { get; private set; }
     public float MaxStamina => maxStamina;
 
+    private void Start()
+    {
+        CurrentStamina = maxStamina;
+    }
+
     public bool TrySpendStamina(float stamina)
     {
         if (CurrentStamina >= stamina)

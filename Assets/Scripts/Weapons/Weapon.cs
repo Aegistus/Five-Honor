@@ -7,8 +7,10 @@ public class Weapon : MonoBehaviour
 {
     public event Action OnAttackBlocked;
     public AnimatorOverrideController AnimationSet => animationSet;
+    public float StaminaCost => staminaCost;
 
     [SerializeField] float damage = 10f;
+    [SerializeField] float staminaCost = 30f;
     [SerializeField] AnimatorOverrideController animationSet;
 
     bool inDamageState = false;

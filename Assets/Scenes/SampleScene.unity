@@ -1868,6 +1868,46 @@ PrefabInstance:
       propertyPath: m_LocalRotation.z
       value: -0.3525135
       objectReference: {fileID: 0}
+    - target: {fileID: 4601832433638974836, guid: 0dfccae2aacbebe4092d95642a9284c5, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4601832433638974836, guid: 0dfccae2aacbebe4092d95642a9284c5, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4601832433638974836, guid: 0dfccae2aacbebe4092d95642a9284c5, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4601832433638974836, guid: 0dfccae2aacbebe4092d95642a9284c5, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4601832433638974836, guid: 0dfccae2aacbebe4092d95642a9284c5, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6123227346981513620, guid: 0dfccae2aacbebe4092d95642a9284c5, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6123227346981513620, guid: 0dfccae2aacbebe4092d95642a9284c5, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6123227346981513620, guid: 0dfccae2aacbebe4092d95642a9284c5, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6123227346981513620, guid: 0dfccae2aacbebe4092d95642a9284c5, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6123227346981513620, guid: 0dfccae2aacbebe4092d95642a9284c5, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0dfccae2aacbebe4092d95642a9284c5, type: 3}
 --- !u!1001 &2577319752614792996

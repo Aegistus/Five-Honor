@@ -48,6 +48,7 @@ public class AgentMovement : MonoBehaviour
     AgentController controller;
     AgentWeapons agentWeapons;
     AgentHealth agentHealth;
+    AgentStamina agentStamina;
     AgentIK agentIK;
     AgentAnimationEvents animationEvents;
 
@@ -67,6 +68,7 @@ public class AgentMovement : MonoBehaviour
         controller = GetComponent<AgentController>();
         agentWeapons = GetComponent<AgentWeapons>();
         agentHealth = GetComponent<AgentHealth>();
+        agentStamina = GetComponent<AgentStamina>();
         agentIK = GetComponentInChildren<AgentIK>();
         animationEvents = GetComponentInChildren<AgentAnimationEvents>();
         agentHealth.OnDamageTaken += () => ChangeState(MovementType.Flinching);
@@ -514,34 +516,42 @@ public class AgentMovement : MonoBehaviour
 
         public override void BeforeExecution()
         {
-            attackCanceled = false;
-            attackReleased = false;
-            attackFinished = false;
-            attackFollowThru = false;
-            movement.agentWeapons.RightWeapon.OnAttackBlocked += AttackCanceled;
-            movement.agentHealth.OnDamageTaken += AttackCanceled;
-            movement.animationEvents.OnAttackRelease += AttackReleased;
-            movement.animationEvents.OnAttackFollowThru += AttackFollowThru;
-            movement.animationEvents.OnAttackFinished += AttackFinish;
-            if (movement.controller.Forwards)
+            // cancel attack if no stamina
+            if (!movement.agentStamina.TrySpendStamina(movement.agentWeapons.RightWeapon.StaminaCost))
             {
-                movementDirection = Vector3.forward;
-            }
-            else if (movement.controller.Backwards)
-            {
-                movementDirection = Vector3.back;
-            }
-            else if (movement.controller.Left)
-            {
-                movementDirection = Vector3.left;
-            }
-            else if (movement.controller.Right)
-            {
-                movementDirection = Vector3.right;
+                attackCanceled = true;
             }
             else
             {
-                movementDirection = Vector3.zero;
+                attackCanceled = false;
+                attackReleased = false;
+                attackFinished = false;
+                attackFollowThru = false;
+                movement.agentWeapons.RightWeapon.OnAttackBlocked += AttackCanceled;
+                movement.agentHealth.OnDamageTaken += AttackCanceled;
+                movement.animationEvents.OnAttackRelease += AttackReleased;
+                movement.animationEvents.OnAttackFollowThru += AttackFollowThru;
+                movement.animationEvents.OnAttackFinished += AttackFinish;
+                if (movement.controller.Forwards)
+                {
+                    movementDirection = Vector3.forward;
+                }
+                else if (movement.controller.Backwards)
+                {
+                    movementDirection = Vector3.back;
+                }
+                else if (movement.controller.Left)
+                {
+                    movementDirection = Vector3.left;
+                }
+                else if (movement.controller.Right)
+                {
+                    movementDirection = Vector3.right;
+                }
+                else
+                {
+                    movementDirection = Vector3.zero;
+                }
             }
         }
 
