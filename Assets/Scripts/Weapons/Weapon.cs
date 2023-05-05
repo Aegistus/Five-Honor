@@ -10,6 +10,8 @@ public class Weapon : MonoBehaviour
     public float StaminaCost => staminaCost;
 
     [SerializeField] float damage = 10f;
+    [SerializeField] float knockbackForce = 1f;
+    [SerializeField] float knockbackTime = 1f;
     [SerializeField] float staminaCost = 30f;
     [SerializeField] AnimatorOverrideController animationSet;
 
@@ -17,6 +19,7 @@ public class Weapon : MonoBehaviour
     GuardDirection attackDirection = GuardDirection.None;
     List<AgentHealth> alreadyHit = new List<AgentHealth>();
     AgentHealth damageSource;
+    float timer = 0f;
     int hitSoundID;
     int swingSoundID;
 
@@ -44,18 +47,40 @@ public class Weapon : MonoBehaviour
     {
         if (inDamageState)
         {
-            AgentHealth health = other.GetComponentInParent<AgentHealth>();
-            if (health != null && !alreadyHit.Contains(health) && health != damageSource && !health.IsDead)
+            HitTarget(other.GetComponentInParent<AgentHealth>());
+        }
+    }
+
+    void HitTarget(AgentHealth health)
+    {
+        if (health != null && !alreadyHit.Contains(health) && health != damageSource && !health.IsDead)
+        {
+            bool attackSucceeded = health.AttemptDamage(damage, attackDirection);
+            if (!attackSucceeded)
             {
-                bool attackSucceeded = health.AttemptDamage(damage, attackDirection);
-                if (!attackSucceeded)
-                {
-                    OnAttackBlocked?.Invoke();
-                    inDamageState = false;
-                }
-                SoundManager.Instance.PlaySoundAtPosition(hitSoundID, transform.position);
-                alreadyHit.Add(health);
+                OnAttackBlocked?.Invoke();
+                inDamageState = false;
             }
+            timer = knockbackTime;
+            AgentMovement target = health.GetComponent<AgentMovement>();
+            if (target != null)
+            {
+                StartCoroutine(Knockback(target));
+            }
+            SoundManager.Instance.PlaySoundAtPosition(hitSoundID, transform.position);
+            alreadyHit.Add(health);
+        }
+    }
+
+    IEnumerator Knockback(AgentMovement target)
+    {
+        Vector3 knockbackDirection = (target.transform.position - damageSource.transform.position).normalized;
+        knockbackDirection.y = 0f;
+        while (timer > 0)
+        {
+            target.MoveInDirection(target.AgentModel.InverseTransformDirection(knockbackDirection), knockbackForce);
+            timer -= Time.deltaTime;
+            yield return null;
         }
     }
 }

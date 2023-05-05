@@ -24,6 +24,7 @@ public class AgentMovement : MonoBehaviour
     public float MaxRunSpeed => runSpeed;
     public StanceType CurrentStance => currentStance;
     public GuardDirection CurrentGuardDirection { get; private set; } = GuardDirection.Left;
+    public Transform AgentModel => agentModel;
 
     [SerializeField] Transform agentModel;
     [SerializeField] Transform followTarget;
@@ -185,7 +186,7 @@ public class AgentMovement : MonoBehaviour
     /// </summary>
     /// <param name="direction"></param>
     /// <param name="speed"></param>
-    void MoveInDirection(Vector3 direction, float speed)
+    public void MoveInDirection(Vector3 direction, float speed)
     {
         direction.Normalize();
         direction = agentModel.TransformVector(direction);
