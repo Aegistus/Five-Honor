@@ -3784,6 +3784,8 @@ GameObject:
   - component: {fileID: 5200537382030243456}
   - component: {fileID: 5200537382030243457}
   - component: {fileID: 5200537382030243458}
+  - component: {fileID: -3895565475989585263}
+  - component: {fileID: 2239907351388351865}
   m_Layer: 0
   m_Name: Samurai Model
   m_TagString: Untagged
@@ -3867,7 +3869,7 @@ MonoBehaviour:
   rightWeapon: {fileID: 0}
   rightHand: {fileID: 2874530732026243087}
   leftHand: {fileID: 2874530733399384022}
-  switchHandInPassive: 1
+  iKTransitionSpeed: 5
 --- !u!136 &5200537382030243457
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -3898,6 +3900,30 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &-3895565475989585263
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5295425086186636995}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 05accb3b53ed84041aa3dced26ef79f4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &2239907351388351865
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5295425086186636995}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 61638c006301b6146be77c15872be966, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &5295432257447262099
 GameObject:
   m_ObjectHideFlags: 0

@@ -8,11 +8,33 @@ using UnityEngine;
 public class AttackAgentController : AgentController
 {
     GuardDirection currentDirection = GuardDirection.Left;
+    float minDistanceFromPlayer = 5f;
 
     private void Start()
     {
+        Target = FindObjectOfType<PlayerController>().transform;
+
         StartCoroutine(Attack());
         StartCoroutine(ChangeAttackDirection());
+        StartCoroutine(SwitchToGuardStance());
+    }
+
+    private void Update()
+    {
+        if (Vector3.Distance(transform.position, Target.position) > minDistanceFromPlayer)
+        {
+            Forwards = true;
+        }
+        else
+        {
+            Forwards = false;
+        }
+    }
+
+    IEnumerator SwitchToGuardStance()
+    {
+        yield return new WaitForSeconds(2f);
+        GetComponent<AgentMovement>().ChangeStance(StanceType.Combat);
     }
 
     IEnumerator Attack()

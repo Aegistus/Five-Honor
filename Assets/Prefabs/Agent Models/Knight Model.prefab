@@ -525,6 +525,8 @@ GameObject:
   - component: {fileID: 3951471044198682849}
   - component: {fileID: 3951471044198682850}
   - component: {fileID: 3951471044198682851}
+  - component: {fileID: 1007578414485360285}
+  - component: {fileID: 4869048668357039713}
   m_Layer: 0
   m_Name: Knight Model
   m_TagString: Untagged
@@ -606,7 +608,7 @@ MonoBehaviour:
   rightWeapon: {fileID: 0}
   rightHand: {fileID: 8909269606905080602}
   leftHand: {fileID: 8909269607288282854}
-  switchHandInPassive: 1
+  iKTransitionSpeed: 5
 --- !u!136 &3951471044198682850
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -637,6 +639,30 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &1007578414485360285
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3999306483235060290}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 05accb3b53ed84041aa3dced26ef79f4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &4869048668357039713
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3999306483235060290}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 61638c006301b6146be77c15872be966, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &3999314408259463308
 GameObject:
   m_ObjectHideFlags: 0

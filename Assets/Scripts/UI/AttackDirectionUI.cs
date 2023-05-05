@@ -10,6 +10,7 @@ public class AttackDirectionUI : MonoBehaviour
     [SerializeField] GameObject right;
 
     AgentMovement movement;
+    Transform mainCam;
 
     private void Awake()
     {
@@ -17,6 +18,12 @@ public class AttackDirectionUI : MonoBehaviour
         movement.OnStanceChange += StanceChange;
         movement.OnGuardDirectionChange += ChangeGuardDirection;
         uiElement.SetActive(false);
+        mainCam = Camera.main.transform;
+    }
+
+    private void Update()
+    {
+        transform.LookAt(mainCam);
     }
 
     void StanceChange(StanceType stance)
@@ -53,6 +60,5 @@ public class AttackDirectionUI : MonoBehaviour
             right.SetActive(true);
         }
     }
-
 
 }

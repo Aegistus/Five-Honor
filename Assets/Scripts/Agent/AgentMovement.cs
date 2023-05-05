@@ -229,7 +229,7 @@ public class AgentMovement : MonoBehaviour
         agentModel.rotation = Quaternion.Lerp(currentRotation, targetRotation, modelTurnSpeed * Time.deltaTime);
     }
 
-    void ChangeStance(StanceType newStance)
+    public void ChangeStance(StanceType newStance)
     {
         currentStance = newStance;
         if (newStance == StanceType.Combat)
