@@ -1860,6 +1860,10 @@ PrefabInstance:
       propertyPath: groundLayer.m_Bits
       value: 192
       objectReference: {fileID: 0}
+    - target: {fileID: 1826577625621056547, guid: 0dfccae2aacbebe4092d95642a9284c5, type: 3}
+      propertyPath: staminaRegainRate
+      value: 40
+      objectReference: {fileID: 0}
     - target: {fileID: 4539714255292344660, guid: 0dfccae2aacbebe4092d95642a9284c5, type: 3}
       propertyPath: m_LocalRotation.x
       value: -0.57854766

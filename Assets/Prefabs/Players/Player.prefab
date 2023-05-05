@@ -558,7 +558,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxStamina: 100
-  staminaRegainRate: 10
+  staminaRegainRate: 40
+  staminaRegenDelay: 2
 --- !u!1 &2045809103176444239
 GameObject:
   m_ObjectHideFlags: 0

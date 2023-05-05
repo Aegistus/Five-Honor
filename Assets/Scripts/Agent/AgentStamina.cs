@@ -7,11 +7,14 @@ public class AgentStamina : MonoBehaviour
 {
     [SerializeField] float maxStamina = 100f;
     [SerializeField] float staminaRegainRate = 50f;
+    [SerializeField] float staminaRegenDelay = 2f;
 
     public event Action OnStaminaChange;
 
     public float CurrentStamina { get; private set; }
     public float MaxStamina => maxStamina;
+
+    float currentDelay = 0f;
 
     private void Start()
     {
@@ -38,6 +41,7 @@ public class AgentStamina : MonoBehaviour
         {
             CurrentStamina = 0f;
         }
+        currentDelay = staminaRegenDelay;
         OnStaminaChange?.Invoke();
     }
 
@@ -45,8 +49,16 @@ public class AgentStamina : MonoBehaviour
     {
         if (CurrentStamina < MaxStamina)
         {
-            CurrentStamina += staminaRegainRate * Time.deltaTime;
-            CurrentStamina = Mathf.Clamp(CurrentStamina, 0, MaxStamina);
+            if (currentDelay <= 0)
+            {
+                CurrentStamina += staminaRegainRate * Time.deltaTime;
+                CurrentStamina = Mathf.Clamp(CurrentStamina, 0, MaxStamina);
+            }
+            else
+            {
+                currentDelay -= Time.deltaTime;
+            }
+
         }
     }
 
