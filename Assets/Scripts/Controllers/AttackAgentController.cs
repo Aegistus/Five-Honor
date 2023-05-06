@@ -7,6 +7,8 @@ using UnityEngine;
 /// </summary>
 public class AttackAgentController : AgentController
 {
+    [SerializeField] Transform followTarget;
+
     GuardDirection currentDirection = GuardDirection.Left;
     float minDistanceFromPlayer = 5f;
 
@@ -21,6 +23,10 @@ public class AttackAgentController : AgentController
 
     private void Update()
     {
+        if (Target != null)
+        {
+            followTarget.LookAt(Target.position);
+        }
         if (Vector3.Distance(transform.position, Target.position) > minDistanceFromPlayer)
         {
             Forwards = true;
