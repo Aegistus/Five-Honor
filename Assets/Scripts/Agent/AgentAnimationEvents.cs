@@ -5,22 +5,22 @@ using System;
 
 public class AgentAnimationEvents : MonoBehaviour
 {
-    public event Action OnAttackRelease;
-    public event Action OnAttackFollowThru;
-    public event Action OnAttackFinished;
+    public event Action OnRelease;
+    public event Action OnFollowThru;
+    public event Action OnFinished;
 
     public void Release()
     {
-        OnAttackRelease?.Invoke();
+        OnRelease?.Invoke();
     }
 
     public void FollowThru()
     {
-        OnAttackFollowThru?.Invoke();
+        OnFollowThru?.Invoke();
     }
 
     public void Finish()
     {
-        OnAttackFinished?.Invoke();
+        OnFinished?.Invoke();
     }
 }

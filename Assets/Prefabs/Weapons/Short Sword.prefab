@@ -68,6 +68,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   damage: 10
+  knockbackForce: 2
+  knockbackTime: 0.25
+  staminaCost: 30
   animationSet: {fileID: 22100000, guid: 646fb5827992e254996b208f6b1e6187, type: 2}
 --- !u!65 &332284492
 BoxCollider:

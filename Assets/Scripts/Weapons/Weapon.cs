@@ -61,11 +61,14 @@ public class Weapon : MonoBehaviour
                 OnAttackBlocked?.Invoke();
                 inDamageState = false;
             }
-            timer = knockbackTime;
-            AgentMovement target = health.GetComponent<AgentMovement>();
-            if (target != null)
+            else
             {
-                StartCoroutine(Knockback(target));
+                timer = knockbackTime;
+                AgentMovement target = health.GetComponent<AgentMovement>();
+                if (target != null)
+                {
+                    StartCoroutine(Knockback(target));
+                }
             }
             SoundManager.Instance.PlaySoundAtPosition(hitSoundID, transform.position);
             alreadyHit.Add(health);

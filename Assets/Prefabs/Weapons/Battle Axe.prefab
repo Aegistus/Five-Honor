@@ -132,7 +132,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   damage: 10
   knockbackForce: 2
-  knockbackTime: 0.5
+  knockbackTime: 0.25
   staminaCost: 30
   animationSet: {fileID: 22100000, guid: 6f32cd76117ee9c479fc27cb0b9076b1, type: 2}
 --- !u!65 &1484985693486923614
@@ -146,8 +146,8 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.14, y: 0.58, z: 0.4}
-  m_Center: {x: 0, y: 1.14, z: 0.03}
+  m_Size: {x: 0.14, y: 0.75, z: 0.4}
+  m_Center: {x: 0, y: 1, z: 0.03}
 --- !u!54 &1484985693486923613
 Rigidbody:
   m_ObjectHideFlags: 0

@@ -510,9 +510,9 @@ public class AgentMovement : MonoBehaviour
         {
             movement.agentWeapons.RightWeapon.OnAttackBlocked -= AttackCanceled;
             movement.agentHealth.OnDamageTaken -= AttackCanceled;
-            movement.animationEvents.OnAttackRelease -= AttackReleased;
-            movement.animationEvents.OnAttackFollowThru -= AttackFollowThru;
-            movement.animationEvents.OnAttackFinished -= AttackFinish;
+            movement.animationEvents.OnRelease -= AttackReleased;
+            movement.animationEvents.OnFollowThru -= AttackFollowThru;
+            movement.animationEvents.OnFinished -= AttackFinish;
         }
 
         public override void BeforeExecution()
@@ -530,9 +530,9 @@ public class AgentMovement : MonoBehaviour
                 attackFollowThru = false;
                 movement.agentWeapons.RightWeapon.OnAttackBlocked += AttackCanceled;
                 movement.agentHealth.OnDamageTaken += AttackCanceled;
-                movement.animationEvents.OnAttackRelease += AttackReleased;
-                movement.animationEvents.OnAttackFollowThru += AttackFollowThru;
-                movement.animationEvents.OnAttackFinished += AttackFinish;
+                movement.animationEvents.OnRelease += AttackReleased;
+                movement.animationEvents.OnFollowThru += AttackFollowThru;
+                movement.animationEvents.OnFinished += AttackFinish;
                 if (movement.controller.Forwards)
                 {
                     movementDirection = Vector3.forward;
@@ -718,6 +718,7 @@ public class AgentMovement : MonoBehaviour
     class BlockingState : MovementState
     {
         float currentTime = 0f;
+        bool followingThru = false;
 
         public BlockingState(AgentMovement movement) : base(movement)
         {
@@ -731,6 +732,13 @@ public class AgentMovement : MonoBehaviour
         public override void BeforeExecution()
         {
             currentTime = 0f;
+            followingThru = false;
+            movement.animationEvents.OnFollowThru += FollowThruEvent;
+        }
+
+        private void FollowThruEvent()
+        {
+            followingThru = true;
         }
 
         public override MovementType? CheckTransitions()
@@ -738,6 +746,10 @@ public class AgentMovement : MonoBehaviour
             if (currentTime >= movement.blockDuration)
             {
                 return MovementType.Standing;
+            }
+            if (followingThru && movement.controller.LightAttack)
+            {
+                return MovementType.Attacking;
             }
 
             return null;
