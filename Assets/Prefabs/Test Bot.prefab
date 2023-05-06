@@ -1773,9 +1773,9 @@ MonoBehaviour:
   movementDirection: {fileID: 4064687586282581216}
   groundLayer:
     serializedVersion: 2
-    m_Bits: 0
-  groundOffset: 0
-  obstacleCheckDistance: 1
+    m_Bits: 64
+  groundOffset: 1
+  obstacleCheckDistance: 0.5
   modelTurnSpeed: 5
   runSpeed: 5
   runAcceleration: 2
