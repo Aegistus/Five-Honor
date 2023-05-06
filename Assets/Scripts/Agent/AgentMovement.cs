@@ -606,6 +606,7 @@ public class AgentMovement : MonoBehaviour
             {
                 movement.MoveInDirection(movementDirection, movement.attackMovementSpeed);
             }
+            movement.CombatRotateAgentModel();
         }
 
         public override void DuringPhysicsUpdate()

@@ -12,6 +12,8 @@ public class AttackAgentController : AgentController
     GuardDirection currentDirection = GuardDirection.Left;
     float minDistanceFromPlayer = 5f;
 
+    bool inAttackRange = false;
+
     private void Start()
     {
         Target = FindObjectOfType<PlayerController>().transform;
@@ -30,10 +32,12 @@ public class AttackAgentController : AgentController
         if (Vector3.Distance(transform.position, Target.position) > minDistanceFromPlayer)
         {
             Forwards = true;
+            inAttackRange = false;
         }
         else
         {
             Forwards = false;
+            inAttackRange = true;
         }
     }
 
@@ -48,9 +52,12 @@ public class AttackAgentController : AgentController
         while (true)
         {
             yield return new WaitForSeconds(2f);
-            LightAttack = true;
-            yield return null;
-            LightAttack = false;
+            if (inAttackRange)
+            {
+                LightAttack = true;
+                yield return null;
+                LightAttack = false;
+            }
         }
     }
 
