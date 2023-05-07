@@ -1755,7 +1755,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b41efabc11034ca46b5730dba9931167, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  followTarget: {fileID: 4064687585690154861}
+  lookDirection: {fileID: 4064687585690154861}
 --- !u!114 &4064687585603650528
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1773,7 +1773,7 @@ MonoBehaviour:
   movementDirection: {fileID: 4064687586282581216}
   groundLayer:
     serializedVersion: 2
-    m_Bits: 64
+    m_Bits: 448
   groundOffset: 1
   obstacleCheckDistance: 0.5
   modelTurnSpeed: 5
@@ -1947,7 +1947,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4064687585690154861}
   m_Layer: 7
-  m_Name: Follow Target
+  m_Name: Look Direction
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
